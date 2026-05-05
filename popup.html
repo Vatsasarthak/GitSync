@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GFG Sync</title>
+  <link rel="stylesheet" href="popup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Lucide Icons (Local for CSP compliance) -->
+  <script src="lucide.js"></script>
+</head>
+<body>
+  <!-- Ambient background glow -->
+  <div class="ambient-glow"></div>
+
+  <div class="container glass-panel">
+    <header>
+      <div class="logo-container">
+        <div class="logo-group">
+          <svg class="icon logo-icon gfg-color" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"></path>
+            <path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"></path>
+          </svg>
+          <svg class="icon sync-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+          <svg class="icon logo-icon github-color" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+          </svg>
+        </div>
+        <h1>GFG<span class="highlight">Sync</span></h1>
+      </div>
+      <p class="subtitle">Automate your coding legacy</p>
+    </header>
+
+    <div class="stats-card glass-panel">
+      <div class="stat">
+        <i data-lucide="code-2" class="stat-icon"></i>
+        <span class="stat-value" id="total-solved">0</span>
+        <span class="stat-label">Solved</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <i data-lucide="flame" class="stat-icon streak-icon"></i>
+        <span class="stat-value" id="current-streak">0</span>
+        <span class="stat-label">Streak</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <i data-lucide="list-video" class="stat-icon warning-icon"></i>
+        <span class="stat-value" id="queue-count" style="color: var(--warning-color)">0</span>
+        <span class="stat-label">Queued</span>
+      </div>
+    </div>
+    
+    <div class="last-synced-container">
+       <i data-lucide="clock" class="icon-small"></i>
+       <span class="label">Last Synced:</span>
+       <span class="value" id="last-synced">None</span>
+    </div>
+
+    <div class="settings">
+      <div class="form-group">
+        <label for="pat-input"><i data-lucide="key" class="icon-small"></i> GitHub Token</label>
+        <div class="input-wrapper">
+           <input type="password" id="pat-input" placeholder="ghp_...">
+           <button id="clear-token-btn" class="btn-icon" title="Clear Token">
+             <i data-lucide="x" class="icon-small"></i>
+           </button>
+        </div>
+        <div class="help-row">
+          <span class="warning-text">⚠️ Stored locally</span>
+          <a href="https://github.com/settings/tokens/new?scopes=repo" target="_blank" class="help-link">Get Token <i data-lucide="external-link" class="icon-tiny"></i></a>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="repo-input"><i data-lucide="book-open" class="icon-small"></i> GitHub Repository</label>
+        <div class="input-wrapper">
+          <input type="text" id="repo-input" placeholder="username/repo">
+        </div>
+      </div>
+
+      <div class="toggle-group glass-panel">
+        <div class="toggle-label">
+          <i data-lucide="refresh-cw" class="icon-small"></i>
+          <span>Auto-Sync Submissions</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="auto-sync-toggle" checked>
+          <span class="slider round"></span>
+        </label>
+      </div>
+
+      <button id="save-btn" class="btn primary glow-effect">
+          <i data-lucide="save" class="btn-icon-left"></i>
+          <span class="btn-text">Save Configuration</span>
+          <span class="loader" style="display: none;"></span>
+      </button>
+      
+      <div class="action-buttons">
+          <button id="push-manual-btn" class="btn secondary">
+            <i data-lucide="upload-cloud" class="btn-icon-left"></i> Push Current
+          </button>
+          <button id="retry-queue-btn" class="btn secondary">
+            <i data-lucide="rotate-cw" class="btn-icon-left"></i> Retry Queue
+          </button>
+      </div>
+      
+      <div id="status-message" class="status-message"></div>
+
+      <div class="debug-section">
+         <div class="toggle-group debug-toggle-group">
+           <label for="debug-toggle" class="debug-label"><i data-lucide="terminal" class="icon-tiny"></i> Debug Mode</label>
+           <label class="switch tiny">
+             <input type="checkbox" id="debug-toggle">
+             <span class="slider round"></span>
+           </label>
+         </div>
+         <pre id="debug-logs" style="display: none;"></pre>
+      </div>
+
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

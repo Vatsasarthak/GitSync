@@ -19,8 +19,6 @@ A Chrome Extension built to simplify DSA tracking, repository management, and co
 
 # 🎥 Demo
 
-> Replace the video link below with your actual uploaded demo video.
-
 ## 📸 Extension Preview
 
 ![Extension Preview](assets/Screenshot%202026-05-07%20024549.png)
@@ -29,7 +27,9 @@ A Chrome Extension built to simplify DSA tracking, repository management, and co
 
 ## 🎬 Full Video Demo
 
-https://github.com/user-attachments/assets/your-video-link.mp4
+[![Watch the Demo](https://img.youtube.com/vi/PGdAHBsV3_I/maxresdefault.jpg)](https://youtu.be/PGdAHBsV3_I)
+
+▶️ Click the image above to watch the full demo video.
 
 ---
 

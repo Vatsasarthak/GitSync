@@ -23,7 +23,7 @@ A Chrome Extension built to simplify DSA tracking, repository management, and co
 
 ## 📸 Extension Preview
 
-![GFG Sync Demo](assets/Screenshot%202026-05-07%20015856.png)
+![GFG Sync Demo](assets/Screenshot 2026-05-07 024549.png)
 
 ---
 

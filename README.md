@@ -23,7 +23,7 @@ A Chrome Extension built to simplify DSA tracking, repository management, and co
 
 ## 📸 Extension Preview
 
-![GFG Sync Demo](assets/Screenshot 2026-05-07 024549.png)
+![Extension Preview](assets/Screenshot%202026-05-07%20024549.png)
 
 ---
 
@@ -35,21 +35,15 @@ https://github.com/user-attachments/assets/your-video-link.mp4
 
 # 🖼️ Screenshots
 
-## Extension Popup UI
-
-![Popup UI](assets/Screenshot%202026-05-07%20015856.png)
-
----
-
 ## Auto Sync in Action
 
-![Sync Demo](assets/Screenshot%202026-05-07%20024549.png)
+![Auto Sync](assets/Screenshot%202026-05-07%20024627.png)
 
 ---
 
 ## GitHub Repository Structure
 
-![Repo Structure](assets/Screenshot%202026-05-07%20024627.png)
+![Repository Structure](assets/Screenshot%202026-05-07%20015856.png)
 
 ---
 

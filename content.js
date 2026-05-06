@@ -106,6 +106,7 @@ function extractProblemData() {
 
   const data = {
     title: '',
+    slug: '',
     description: '',
     difficulty: '',
     tags: [],
@@ -114,43 +115,66 @@ function extractProblemData() {
   };
 
   try {
-    // Title
+    // 1. Get Slug from URL
+    const urlParts = window.location.pathname.split('/');
+    const slugIndex = urlParts.indexOf('problems');
+    if (slugIndex !== -1 && urlParts[slugIndex + 1]) {
+      data.slug = urlParts[slugIndex + 1];
+    }
+
+    // 2. Title
     const titleElement =
       document.querySelector('.problems_header_content__title h3') ||
+      document.querySelector('.problems_header_content__title') ||
+      document.querySelector('h3.problem-tab__name') ||
       document.querySelector('h1') ||
       document.querySelector('.problem-tab__name');
 
-    data.title = titleElement
-      ? titleElement.innerText.trim()
-      : "GFG Problem";
+    if (titleElement) {
+      data.title = titleElement.innerText.split('\n')[0].trim();
+    } else if (data.slug) {
+      data.title = data.slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    } else {
+      data.title = "GFG Problem";
+    }
 
-    // Difficulty
-    const headerText = document.querySelector('.problems_header_content__title') 
-                       ? document.querySelector('.problems_header_content__title').innerText 
-                       : document.body.innerText;
-    if (headerText.includes("Hard")) data.difficulty = "Hard";
-    else if (headerText.includes("Medium")) data.difficulty = "Medium";
-    else if (headerText.includes("Easy")) data.difficulty = "Easy";
-    else data.difficulty = "Unknown";
+    // 3. Difficulty
+    const difficultyElement = 
+      document.querySelector('.problems_header_content__difficulty') ||
+      Array.from(document.querySelectorAll('div')).find(el => el.innerText.match(/^(Easy|Medium|Hard)$/i));
+    
+    if (difficultyElement) {
+      data.difficulty = difficultyElement.innerText.trim();
+    } else {
+      const bodyText = document.body.innerText;
+      if (bodyText.includes("Hard")) data.difficulty = "Hard";
+      else if (bodyText.includes("Medium")) data.difficulty = "Medium";
+      else if (bodyText.includes("Easy")) data.difficulty = "Easy";
+      else data.difficulty = "Unknown";
+    }
 
-    // Description
+    // 4. Description
     const desc =
       document.querySelector('.problems_problem_content__Xm_eO') ||
-      document.querySelector('.problem-statement');
+      document.querySelector('.problem-statement') ||
+      document.querySelector('.problems_problem_content');
 
-    if (desc) data.description = desc.innerHTML;
+    if (desc) {
+      data.description = desc.innerHTML;
+    }
 
-    // Tags
+    // 5. Tags
     const tags = document.querySelectorAll('a[href*="tag"]');
-    data.tags = Array.from(tags).map(t => t.innerText.trim());
+    data.tags = Array.from(tags).map(t => t.innerText.trim()).filter(t => t.length > 0);
 
-    // Code (always exists now)
+    // 6. Code
     data.code = extractCode();
 
-    // Language
+    // 7. Language
     const lang =
       document.querySelector('.selected-value') ||
-      document.querySelector('.language-selector');
+      document.querySelector('.language-selector') ||
+      document.querySelector('.header-left .language-selector');
 
     data.language = lang ? lang.innerText.trim() : "unknown";
 

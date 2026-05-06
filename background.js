@@ -44,10 +44,16 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 // 🔥 DIRECT PUSH (NO QUEUE FOR NOW)
 async function handleSubmission(data) {
-  const { githubPat, githubRepo } = await chrome.storage.local.get(['githubPat', 'githubRepo']);
+  let { githubPat, githubRepo } = await chrome.storage.local.get(['githubPat', 'githubRepo']);
 
   if (!githubPat || !githubRepo) {
     throw new Error('GitHub PAT or Repository not configured.');
+  }
+
+  // Failsafe: if repo is a full URL, extract the owner/repo part
+  if (githubRepo.includes('github.com/')) {
+    githubRepo = githubRepo.split('github.com/')[1].split('/').slice(0, 2).join('/');
+    githubRepo = githubRepo.replace(/\/$/, '').replace(/\.git$/, '');
   }
 
   try {
@@ -63,16 +69,24 @@ async function handleSubmission(data) {
 async function syncSingleProblem(data, pat, repo) {
   const extension = getFileExtension(data.language);
 
+  // Use slug if available, otherwise title
+  let folderName = data.slug || data.title;
+  
   // Safe naming (kebab-case)
-  let safeTitle = data.title.replace(/[^a-zA-Z0-9\s-]/g, '');
-  safeTitle = safeTitle.replace(/\s+/g, '-').toLowerCase().trim();
+  let safeFolderName = folderName.replace(/[^a-zA-Z0-9\s-]/g, '');
+  safeFolderName = safeFolderName.replace(/\s+/g, '-').toLowerCase().trim();
+
+  // If the title is still very generic, add a timestamp to prevent overwrite
+  if (safeFolderName === 'gfg-problem' || !safeFolderName) {
+    safeFolderName = `gfg-${Date.now()}`;
+  }
 
   let difficultyColor = 'brightgreen';
   if (data.difficulty === 'Medium') difficultyColor = 'yellow';
   else if (data.difficulty === 'Hard') difficultyColor = 'red';
 
-  const folderPath = `${safeTitle}`;
-  const codePath = `${folderPath}/${safeTitle}.${extension}`;
+  const folderPath = `${safeFolderName}`;
+  const codePath = `${folderPath}/${safeFolderName}.${extension}`;
   const readmePath = `${folderPath}/README.md`;
 
   const commitMessage = `Added GFG: ${data.title} (${data.difficulty || 'Unknown'})`;
@@ -139,9 +153,20 @@ async function pushToGitHub(pat, repo, path, content, message) {
   });
 
   if (!putRes.ok) {
-    const err = await putRes.json();
-    console.error("❌ GitHub Error:", err);
-    throw new Error(`${putRes.status} ${err.message}`);
+    let err = {};
+    try {
+      err = await putRes.json();
+    } catch(e) {}
+    
+    console.error("❌ GitHub Error:", JSON.stringify(err));
+    
+    if (putRes.status === 404) {
+      throw new Error(`404 Not Found: Check if repository '${repo}' exists and your PAT has 'repo' scope.`);
+    } else if (putRes.status === 403 || putRes.status === 401) {
+      throw new Error(`${putRes.status} Unauthorized: Check your PAT permissions (needs 'repo' scope).`);
+    }
+    
+    throw new Error(`${putRes.status} ${err.message || 'Unknown error'}`);
   }
 
   return true;

@@ -115,16 +115,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // Save settings with Token Validation
   saveBtn.addEventListener('click', async () => {
     const pat = patInput.value.trim();
-    const repo = repoInput.value.trim();
+    const repoInputVal = repoInput.value.trim();
     const autoSync = autoSyncToggle.checked;
 
-    if (!pat || !repo) {
+    if (!pat || !repoInputVal) {
       showStatus('❌ Please enter both PAT and Repository.', 'error');
       return;
     }
 
-    if (!repo.includes('/')) {
-      showStatus('❌ Repository must be username/repo', 'error');
+    let cleanRepo = repoInputVal;
+    if (repoInputVal.includes('github.com/')) {
+      cleanRepo = repoInputVal.split('github.com/')[1].split('/').slice(0, 2).join('/');
+    }
+    // Remove any trailing slashes or .git
+    cleanRepo = cleanRepo.replace(/\/$/, '').replace(/\.git$/, '');
+
+    if (!cleanRepo.includes('/') || cleanRepo.split('/').length !== 2) {
+      showStatus('❌ Repository must be "username/repo" or a GitHub URL.', 'error');
       return;
     }
 
@@ -148,7 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // If valid, save to storage
-      await chrome.storage.local.set({ githubPat: pat, githubRepo: repo, autoSync: autoSync });
+      await chrome.storage.local.set({ githubPat: pat, githubRepo: cleanRepo, autoSync: autoSync });
+      repoInput.value = cleanRepo; // Update UI with cleaned repo
       showStatus('✅ GitHub connected successfully', 'success');
 
     } catch (err) {

@@ -208,7 +208,7 @@ async function syncSubmission(callback = null) {
 
     chrome.runtime.sendMessage(
       {
-        action: 'PUSH_SUBMISSION',
+        action: 'push_submission',
         data: problemData
       },
       (response) => {

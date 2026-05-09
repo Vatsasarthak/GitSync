@@ -2,7 +2,7 @@
 // background.js
 
 const GITHUB_CLIENT_ID = 'Ov23lid1EC78Wl5IT5Tv'; // Your GitHub Client ID
-const BACKEND_URL = 'http://localhost:3000'; // Dev URL
+const BACKEND_URL = 'https://gfgsync.onrender.com'; // Production URL
 const REDIRECT_URI = `https://${chrome.runtime.id}.chromiumapp.org/`;
 
 async function log(message, ...args) {
@@ -35,28 +35,30 @@ async function showTemporaryFireIcon() {
 
 // 🔥 MESSAGE HANDLER
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.action === 'LOGIN') {
+  log("Message received:", request.action);
+
+  if (request.action === 'login') {
     loginWithGitHub()
       .then(result => sendResponse(result))
       .catch(error => sendResponse({ status: 'error', message: error.message }));
     return true;
   }
 
-  if (request.action === 'LOGOUT') {
+  if (request.action === 'logout') {
     chrome.storage.local.remove(['githubToken', 'githubUser', 'githubRepo'], () => {
       sendResponse({ status: 'success' });
     });
     return true;
   }
 
-  if (request.action === 'GET_REPOS') {
+  if (request.action === 'get_repos') {
     fetchRepositories()
       .then(repos => sendResponse({ status: 'success', repos }))
       .catch(error => sendResponse({ status: 'error', message: error.message }));
     return true;
   }
 
-  if (request.action === 'PUSH_SUBMISSION') {
+  if (request.action === 'push_submission') {
     handleSubmission(request.data)
       .then(result => sendResponse(result))
       .catch(error => {
@@ -64,6 +66,12 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         sendResponse({ status: 'error', message: error.toString() });
       });
     return true;
+  }
+
+  // Fallback for popup manual triggers
+  if (request.action === 'push_current' || request.action === 'retry_queue') {
+     sendResponse({ status: 'error', message: 'This feature is coming soon in the next update!' });
+     return true;
   }
 });
 

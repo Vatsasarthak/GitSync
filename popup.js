@@ -1,11 +1,6 @@
 // popup.js
 
 document.addEventListener('DOMContentLoaded', async () => {
-  // Initialize Lucide Icons
-  if (window.lucide) {
-    window.lucide.createIcons();
-  }
-
   // --- UI Elements ---
   const authSection = document.getElementById('auth-section');
   const mainSection = document.getElementById('main-section');
@@ -43,37 +38,39 @@ document.addEventListener('DOMContentLoaded', async () => {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
     
-    let icon = 'info';
-    if (type === 'success') icon = 'check-circle';
-    if (type === 'error') icon = 'alert-circle';
+    let iconSvg = '';
+    if (type === 'success') {
+      iconSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+    } else if (type === 'error') {
+      iconSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+    } else {
+      iconSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+    }
 
     toast.innerHTML = `
-      <i data-lucide="${icon}" class="toast-icon"></i>
+      <div class="toast-icon">${iconSvg}</div>
       <span>${message}</span>
     `;
 
     toastContainer.appendChild(toast);
-    if (window.lucide) window.lucide.createIcons();
 
     // Auto-remove after 3 seconds
     setTimeout(() => {
       toast.classList.add('hiding');
       setTimeout(() => toast.remove(), 400);
-    }, 3000);
+    }, 3500);
   }
 
   // --- State Management ---
   async function updateUIState() {
-    const data = await chrome.storage.local.get(['githubToken', 'user', 'githubUser', 'selectedRepo', 'githubRepo', 'stats', 'queue', 'lastSynced', 'autoSync', 'debugMode']);
+    const data = await chrome.storage.local.get(['githubToken', 'githubUser', 'githubRepo', 'stats', 'lastSynced', 'autoSync', 'debugMode']);
     
-    // Normalize repo selection (ensure both keys are in sync if one is missing)
-    const activeRepo = data.githubRepo || data.selectedRepo;
+    const activeRepo = data.githubRepo;
 
     // Update Stats
     const stats = data.stats || {};
     totalSolvedEl.textContent = stats.totalSolved || 0;
     currentStreakEl.textContent = stats.streak || 0;
-    queueCountEl.textContent = data.queue ? data.queue.length : 0;
     lastSyncedEl.textContent = data.lastSynced || 'None';
 
     // Update Toggles
@@ -86,13 +83,10 @@ document.addEventListener('DOMContentLoaded', async () => {
       authSection.style.display = 'none';
       mainSection.style.display = 'block';
       
-      const user = data.githubUser || data.user;
+      const user = data.githubUser;
       if (user) {
         userAvatar.src = user.avatar || user.avatar_url;
         userName.textContent = user.name || user.login;
-      } else {
-        // Auto-recover user info if missing
-        fetchUserInfo(data.githubToken);
       }
 
       await loadRepositories(activeRepo);
@@ -110,60 +104,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     repoSelect.innerHTML = '<option value="">Loading repositories...</option>';
     
     try {
-      const { githubToken } = await chrome.storage.local.get(['githubToken']);
-      if (!githubToken) return;
-
-      const response = await fetch('https://api.github.com/user/repos?per_page=100&sort=updated', {
-        headers: {
-          'Authorization': `token ${githubToken}`,
-          'Accept': 'application/vnd.github.v3+json'
-        }
-      });
-
-      if (!response.ok) throw new Error('Failed to fetch repositories');
-
-      const repos = await response.json();
-      repoSelect.innerHTML = '<option value="">Select a repository</option>';
+      const response = await chrome.runtime.sendMessage({ action: 'get_repos' });
       
-      repos.forEach(repo => {
-        const option = document.createElement('option');
-        option.value = repo.full_name;
-        option.textContent = repo.full_name;
-        if (selectedId === repo.full_name) option.selected = true;
-        repoSelect.appendChild(option);
-      });
+      if (response && response.status === 'success') {
+        const repos = response.repos;
+        repoSelect.innerHTML = '<option value="">Select a repository</option>';
+        
+        repos.forEach(repo => {
+          const option = document.createElement('option');
+          option.value = repo.full_name;
+          option.textContent = repo.full_name;
+          if (selectedId === repo.full_name) option.selected = true;
+          repoSelect.appendChild(option);
+        });
+      } else {
+        throw new Error(response?.message || 'Failed to fetch repositories');
+      }
     } catch (error) {
       console.error(error);
       repoSelect.innerHTML = '<option value="">Error loading repos</option>';
-      if (error.message.includes('401')) {
-        showToast('GitHub session expired. Please logout and login again.', 'error');
-      } else {
-        showToast('Failed to load repositories', 'error');
-      }
-    }
-  }
-
-  async function fetchUserInfo(token) {
-    try {
-      const response = await fetch('https://api.github.com/user', {
-        headers: {
-          'Authorization': `token ${token}`,
-          'Accept': 'application/vnd.github.v3+json'
-        }
-      });
-      if (response.ok) {
-        const user = await response.json();
-        const githubUser = {
-          login: user.login,
-          avatar: user.avatar_url,
-          name: user.name
-        };
-        await chrome.storage.local.set({ githubUser });
-        userAvatar.src = githubUser.avatar;
-        userName.textContent = githubUser.name || githubUser.login;
-      }
-    } catch (err) {
-      console.error('Failed to fetch user info:', err);
+      showToast('Failed to load repositories', 'error');
     }
   }
 
@@ -179,13 +139,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     span.style.opacity = '0.5';
 
     try {
-      // Use the correct action name matching your background.js
       const response = await chrome.runtime.sendMessage({ action: 'login' });
-      if (response && response.success) {
+      if (response && response.status === 'success') {
         showToast('Successfully connected to GitHub!', 'success');
         await updateUIState();
       } else {
-        showToast(response?.error || 'Login failed', 'error');
+        showToast(response?.message || 'Login failed', 'error');
       }
     } catch (err) {
       showToast('Connection error', 'error');
@@ -199,19 +158,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Logout
   logoutBtn.addEventListener('click', async () => {
     if (confirm('Are you sure you want to logout?')) {
-      await chrome.storage.local.remove(['githubToken', 'user', 'selectedRepo']);
-      showToast('Logged out successfully', 'info');
-      await updateUIState();
+      const response = await chrome.runtime.sendMessage({ action: 'logout' });
+      if (response && response.status === 'success') {
+        showToast('Logged out successfully', 'info');
+        await updateUIState();
+      }
     }
   });
 
   // Repo Select
   repoSelect.addEventListener('change', async (e) => {
     const selectedRepo = e.target.value;
-    await chrome.storage.local.set({ 
-      selectedRepo: selectedRepo,
-      githubRepo: selectedRepo // Keep both in sync for background.js compatibility
-    });
+    await chrome.storage.local.set({ githubRepo: selectedRepo });
     if (selectedRepo) {
       showToast(`Target set to ${selectedRepo.split('/')[1]}`, 'success');
     }
@@ -219,9 +177,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Refresh Repos
   refreshReposBtn.addEventListener('click', async () => {
-    const { selectedRepo } = await chrome.storage.local.get(['selectedRepo']);
+    const { githubRepo } = await chrome.storage.local.get(['githubRepo']);
     refreshReposBtn.classList.add('rotating');
-    await loadRepositories(selectedRepo);
+    await loadRepositories(githubRepo);
     setTimeout(() => refreshReposBtn.classList.remove('rotating'), 500);
     showToast('Repository list updated', 'info');
   });
@@ -240,38 +198,32 @@ document.addEventListener('DOMContentLoaded', async () => {
     loader.style.display = 'inline-block';
 
     try {
-      const response = await chrome.runtime.sendMessage({ action: 'pushCurrent' });
-      if (response && response.success) {
+      const response = await chrome.runtime.sendMessage({ action: 'push_current' });
+      if (response && response.status === 'success') {
         showToast('Code synced successfully!', 'success');
       } else {
-        showToast(response?.error || 'Sync failed', 'error');
+        showToast(response?.message || 'Manual push coming soon!', 'info');
       }
     } catch (err) {
-      showToast('Push failed: Check connection', 'error');
+      showToast('Push failed', 'error');
     } finally {
       pushManualBtn.disabled = false;
       loader.style.display = 'none';
-      updateUIState();
     }
   });
 
-  // Retry Queue
+  // Process Queue
   retryQueueBtn.addEventListener('click', async () => {
     retryQueueBtn.disabled = true;
     const loader = retryQueueBtn.querySelector('.spinner');
     loader.style.display = 'inline-block';
 
     try {
-      const response = await chrome.runtime.sendMessage({ action: 'retryQueue' });
-      if (response && response.success) {
-        showToast(`Synced ${response.count} items!`, 'success');
-      } else {
-        showToast('Queue is empty or sync failed', 'info');
-      }
+      const response = await chrome.runtime.sendMessage({ action: 'retry_queue' });
+      showToast(response?.message || 'Processing engine ready', 'info');
     } finally {
       retryQueueBtn.disabled = false;
       loader.style.display = 'none';
-      updateUIState();
     }
   });
 
@@ -287,27 +239,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Listen for storage changes to update UI in real-time
   chrome.storage.onChanged.addListener((changes) => {
-    if (changes.totalSolved || changes.currentStreak || changes.queue || changes.lastSynced) {
+    if (changes.githubToken || changes.githubUser || changes.githubRepo || changes.stats || changes.lastSynced) {
       updateUIState();
     }
-    
-    if (changes.logs && debugToggle.checked) {
-      debugLogs.textContent = (changes.logs.newValue || []).join('\n');
-      debugLogs.scrollTop = debugLogs.scrollHeight;
-    }
   });
-
-  // Periodically check queue size for animations
-  setInterval(async () => {
-    const { queue } = await chrome.storage.local.get(['queue']);
-    const count = queue ? queue.length : 0;
-    queueCountEl.textContent = count;
-    if (count > 0) {
-       queueCountEl.style.color = 'var(--warning-color)';
-       queueCountEl.parentElement.querySelector('.stat-icon').classList.add('fire-animation');
-    } else {
-       queueCountEl.style.color = 'var(--text-color)';
-       queueCountEl.parentElement.querySelector('.stat-icon').classList.remove('fire-animation');
-    }
-  }, 2000);
 });

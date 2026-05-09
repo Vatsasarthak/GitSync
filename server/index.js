@@ -30,6 +30,20 @@ app.get('/', (req, res) => {
   res.send('GFG Sync Auth Server is running!');
 });
 
+// GitHub Callback (for extension OAuth flow)
+app.get('/auth/github/callback', (req, res) => {
+  res.send(`
+    <html>
+      <body style="font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #0f172a; color: white;">
+        <div style="text-align: center; padding: 2rem; background: rgba(255,255,255,0.05); border-radius: 1rem; border: 1px solid rgba(255,255,255,0.1);">
+          <h1 style="color: #10b981;">Authentication Successful!</h1>
+          <p>You can now close this window and return to the extension.</p>
+        </div>
+      </body>
+    </html>
+  `);
+});
+
 // OAuth Exchange: Code -> Access Token
 app.post('/api/auth/github', async (req, res) => {
   const { code } = req.body;
@@ -88,5 +102,5 @@ app.get('/api/user', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

@@ -1,0 +1,28 @@
+class Solution {
+    
+    public void recursion(int n, List<String> ans, String pair, int open, int close){
+        // Base case: if the current string has used all 2*n parentheses
+        if(pair.length()==n){
+            ans.add(pair);
+            return;
+        }
+
+        // pair ki length 2*n honi chahiye to balanced pairs k liye open = n and close = n hi hoga
+
+        // Make all possible pairs
+        if(open<n/2){
+            // agar open n se abhi kam h to isko pair me daal skte h
+            recursion(n, ans, pair+'(', open+1, close);
+        }
+        if(close<open){
+            // agar open , close se jada h abhi to ek close pair me daal skte h
+            recursion(n, ans, pair+')', open, close+1);
+        }
+    }
+    
+    public ArrayList<String> generateParentheses(int n) {
+        ArrayList<String> ans = new ArrayList<>();
+        recursion(n, ans, "", 0, 0);
+        return ans;
+    }
+}

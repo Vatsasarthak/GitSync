@@ -12,11 +12,13 @@
     "storage",
     "scripting",
     "activeTab",
-    "alarms"
+    "alarms",
+    "identity"
   ],
   "host_permissions": [
     "https://api.github.com/*",
-    "*://*.geeksforgeeks.org/*"
+    "*://*.geeksforgeeks.org/*",
+    "http://localhost:3000/*"
   ],
   "action": {
     "default_popup": "popup.html",

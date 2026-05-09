@@ -1,260 +1,313 @@
-document.addEventListener('DOMContentLoaded', () => {
-  // Initialize Lucide icons
-  if (typeof lucide !== 'undefined') {
-    lucide.createIcons();
+// popup.js
+
+document.addEventListener('DOMContentLoaded', async () => {
+  // Initialize Lucide Icons
+  if (window.lucide) {
+    window.lucide.createIcons();
   }
 
-  const patInput = document.getElementById('pat-input');
-  const repoInput = document.getElementById('repo-input');
+  // --- UI Elements ---
+  const authSection = document.getElementById('auth-section');
+  const mainSection = document.getElementById('main-section');
+  const loginBtn = document.getElementById('login-btn');
+  const logoutBtn = document.getElementById('logout-btn');
+  const repoSelect = document.getElementById('repo-select');
+  const refreshReposBtn = document.getElementById('refresh-repos-btn');
   const autoSyncToggle = document.getElementById('auto-sync-toggle');
-  const saveBtn = document.getElementById('save-btn');
-  const clearTokenBtn = document.getElementById('clear-token-btn');
   const pushManualBtn = document.getElementById('push-manual-btn');
   const retryQueueBtn = document.getElementById('retry-queue-btn');
-  const statusMsg = document.getElementById('status-message');
-  
+  const debugToggle = document.getElementById('debug-toggle');
+  const debugLogs = document.getElementById('debug-logs');
+  const toastContainer = document.getElementById('toast-container');
+
+  // Stats
   const totalSolvedEl = document.getElementById('total-solved');
   const currentStreakEl = document.getElementById('current-streak');
   const queueCountEl = document.getElementById('queue-count');
   const lastSyncedEl = document.getElementById('last-synced');
 
-  const debugToggle = document.getElementById('debug-toggle');
-  const debugLogs = document.getElementById('debug-logs');
+  // Profile
+  const userAvatar = document.getElementById('user-avatar');
+  const userName = document.getElementById('user-name');
 
-  let debugMode = false;
-
-  // Load saved settings
-  function loadUI() {
-    chrome.storage.local.get(['githubPat', 'githubRepo', 'autoSync', 'stats', 'syncQueue', 'lastSynced', 'debugMode'], (result) => {
-      if (result.githubPat) patInput.value = result.githubPat;
-      if (result.githubRepo) repoInput.value = result.githubRepo;
-      if (result.autoSync !== undefined) autoSyncToggle.checked = result.autoSync;
-      
-      if (result.stats) {
-        totalSolvedEl.textContent = result.stats.totalSolved || 0;
-        currentStreakEl.textContent = result.stats.streak || 0;
-        
-        const today = new Date().toDateString();
-        const streakIcon = document.querySelector('.streak-icon');
-        if (result.stats.lastSolveDate === today) {
-          if (streakIcon) streakIcon.classList.add('fire-animation');
-        } else {
-          if (streakIcon) streakIcon.classList.remove('fire-animation');
-        }
-      }
-
-      if (result.syncQueue) {
-         queueCountEl.textContent = result.syncQueue.length;
-         if (result.syncQueue.length > 0) {
-            showStatus(`⏳ Pending sync: ${result.syncQueue.length} (offline or failed earlier)`, 'warning');
-         }
-      }
-
-      if (result.lastSynced) {
-         lastSyncedEl.textContent = result.lastSynced;
-      }
-
-      if (result.debugMode) {
-         debugToggle.checked = true;
-         debugMode = true;
-         debugLogs.style.display = 'block';
-         debugLogs.textContent = `Queue Size: ${result.syncQueue?.length || 0}\nLast Sync: ${result.lastSynced || 'None'}`;
-      } else {
-         debugToggle.checked = false;
-         debugMode = false;
-         debugLogs.style.display = 'none';
-      }
+  // --- Animation Utilities ---
+  function triggerStaggeredAnimations() {
+    const elements = document.querySelectorAll('.staggered');
+    elements.forEach((el, index) => {
+      el.style.animationDelay = `${index * 0.08}s`;
     });
   }
 
-  loadUI();
+  // --- Toast System ---
+  function showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    
+    let icon = 'info';
+    if (type === 'success') icon = 'check-circle';
+    if (type === 'error') icon = 'alert-circle';
 
-  // Listen for background updates
-  chrome.storage.onChanged.addListener((changes, namespace) => {
-    if (namespace === 'local') {
-      if (changes.stats) {
-        totalSolvedEl.textContent = changes.stats.newValue.totalSolved || 0;
-        currentStreakEl.textContent = changes.stats.newValue.streak || 0;
-        
-        const today = new Date().toDateString();
-        const streakIcon = document.querySelector('.streak-icon');
-        if (changes.stats.newValue.lastSolveDate === today) {
-          if (streakIcon) streakIcon.classList.add('fire-animation');
-        } else {
-          if (streakIcon) streakIcon.classList.remove('fire-animation');
-        }
+    toast.innerHTML = `
+      <i data-lucide="${icon}" class="toast-icon"></i>
+      <span>${message}</span>
+    `;
+
+    toastContainer.appendChild(toast);
+    if (window.lucide) window.lucide.createIcons();
+
+    // Auto-remove after 3 seconds
+    setTimeout(() => {
+      toast.classList.add('hiding');
+      setTimeout(() => toast.remove(), 400);
+    }, 3000);
+  }
+
+  // --- State Management ---
+  async function updateUIState() {
+    const data = await chrome.storage.local.get(['githubToken', 'user', 'githubUser', 'selectedRepo', 'githubRepo', 'stats', 'queue', 'lastSynced', 'autoSync', 'debugMode']);
+    
+    // Normalize repo selection (ensure both keys are in sync if one is missing)
+    const activeRepo = data.githubRepo || data.selectedRepo;
+
+    // Update Stats
+    const stats = data.stats || {};
+    totalSolvedEl.textContent = stats.totalSolved || 0;
+    currentStreakEl.textContent = stats.streak || 0;
+    queueCountEl.textContent = data.queue ? data.queue.length : 0;
+    lastSyncedEl.textContent = data.lastSynced || 'None';
+
+    // Update Toggles
+    autoSyncToggle.checked = data.autoSync !== false;
+    debugToggle.checked = !!data.debugMode;
+    debugLogs.style.display = data.debugMode ? 'block' : 'none';
+
+    if (data.githubToken) {
+      // Logged In
+      authSection.style.display = 'none';
+      mainSection.style.display = 'block';
+      
+      const user = data.githubUser || data.user;
+      if (user) {
+        userAvatar.src = user.avatar || user.avatar_url;
+        userName.textContent = user.name || user.login;
+      } else {
+        // Auto-recover user info if missing
+        fetchUserInfo(data.githubToken);
       }
-      if (changes.syncQueue) {
-         queueCountEl.textContent = changes.syncQueue.newValue.length;
-         if (changes.syncQueue.newValue.length > 0) {
-            showStatus(`⏳ Pending sync: ${changes.syncQueue.newValue.length} (offline or failed earlier)`, 'warning');
-         }
-      }
-      if (changes.lastSynced) {
-         lastSyncedEl.textContent = changes.lastSynced.newValue;
-      }
-    }
-  });
 
-  // Handle Debug Toggle
-  debugToggle.addEventListener('change', () => {
-     debugMode = debugToggle.checked;
-     chrome.storage.local.set({ debugMode });
-     debugLogs.style.display = debugMode ? 'block' : 'none';
-     loadUI();
-  });
-
-  // Handle Clear Token
-  clearTokenBtn.addEventListener('click', () => {
-      chrome.storage.local.remove(['githubPat'], () => {
-         patInput.value = '';
-         showStatus('✅ Token cleared from storage.', 'success');
-      });
-  });
-
-  // Save settings with Token Validation
-  saveBtn.addEventListener('click', async () => {
-    const pat = patInput.value.trim();
-    const repoInputVal = repoInput.value.trim();
-    const autoSync = autoSyncToggle.checked;
-
-    if (!pat || !repoInputVal) {
-      showStatus('❌ Please enter both PAT and Repository.', 'error');
-      return;
+      await loadRepositories(activeRepo);
+    } else {
+      // Logged Out
+      authSection.style.display = 'flex';
+      mainSection.style.display = 'none';
     }
 
-    let cleanRepo = repoInputVal;
-    if (repoInputVal.includes('github.com/')) {
-      cleanRepo = repoInputVal.split('github.com/')[1].split('/').slice(0, 2).join('/');
-    }
-    // Remove any trailing slashes or .git
-    cleanRepo = cleanRepo.replace(/\/$/, '').replace(/\.git$/, '');
+    triggerStaggeredAnimations();
+  }
 
-    if (!cleanRepo.includes('/') || cleanRepo.split('/').length !== 2) {
-      showStatus('❌ Repository must be "username/repo" or a GitHub URL.', 'error');
-      return;
-    }
-
-    setLoading(saveBtn, true);
-    showStatus('⏳ Validating token...', 'info');
-
+  // --- API Helpers ---
+  async function loadRepositories(selectedId) {
+    repoSelect.innerHTML = '<option value="">Loading repositories...</option>';
+    
     try {
-      // Validate Token via GitHub API
+      const { githubToken } = await chrome.storage.local.get(['githubToken']);
+      if (!githubToken) return;
+
+      const response = await fetch('https://api.github.com/user/repos?per_page=100&sort=updated', {
+        headers: {
+          'Authorization': `token ${githubToken}`,
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      });
+
+      if (!response.ok) throw new Error('Failed to fetch repositories');
+
+      const repos = await response.json();
+      repoSelect.innerHTML = '<option value="">Select a repository</option>';
+      
+      repos.forEach(repo => {
+        const option = document.createElement('option');
+        option.value = repo.full_name;
+        option.textContent = repo.full_name;
+        if (selectedId === repo.full_name) option.selected = true;
+        repoSelect.appendChild(option);
+      });
+    } catch (error) {
+      console.error(error);
+      repoSelect.innerHTML = '<option value="">Error loading repos</option>';
+      if (error.message.includes('401')) {
+        showToast('GitHub session expired. Please logout and login again.', 'error');
+      } else {
+        showToast('Failed to load repositories', 'error');
+      }
+    }
+  }
+
+  async function fetchUserInfo(token) {
+    try {
       const response = await fetch('https://api.github.com/user', {
         headers: {
-           'Authorization': `token ${pat}`,
-           'Accept': 'application/vnd.github.v3+json'
+          'Authorization': `token ${token}`,
+          'Accept': 'application/vnd.github.v3+json'
         }
       });
-
-      if (!response.ok) {
-         if (response.status === 401) {
-             throw new Error("Invalid token or insufficient permissions");
-         }
-         throw new Error(`API Error: ${response.status}`);
+      if (response.ok) {
+        const user = await response.json();
+        const githubUser = {
+          login: user.login,
+          avatar: user.avatar_url,
+          name: user.name
+        };
+        await chrome.storage.local.set({ githubUser });
+        userAvatar.src = githubUser.avatar;
+        userName.textContent = githubUser.name || githubUser.login;
       }
-
-      // If valid, save to storage
-      await chrome.storage.local.set({ githubPat: pat, githubRepo: cleanRepo, autoSync: autoSync });
-      repoInput.value = cleanRepo; // Update UI with cleaned repo
-      showStatus('✅ GitHub connected successfully', 'success');
-
     } catch (err) {
-      console.error("[GFG Sync ERROR]", err);
-      showStatus(`❌ ${err.message}`, 'error');
+      console.error('Failed to fetch user info:', err);
+    }
+  }
+
+  // --- Event Listeners ---
+
+  // Login
+  loginBtn.addEventListener('click', async () => {
+    loginBtn.disabled = true;
+    const loader = loginBtn.querySelector('.spinner');
+    const span = loginBtn.querySelector('span');
+    
+    loader.style.display = 'inline-block';
+    span.style.opacity = '0.5';
+
+    try {
+      // Use the correct action name matching your background.js
+      const response = await chrome.runtime.sendMessage({ action: 'login' });
+      if (response && response.success) {
+        showToast('Successfully connected to GitHub!', 'success');
+        await updateUIState();
+      } else {
+        showToast(response?.error || 'Login failed', 'error');
+      }
+    } catch (err) {
+      showToast('Connection error', 'error');
     } finally {
-      setLoading(saveBtn, false);
+      loginBtn.disabled = false;
+      loader.style.display = 'none';
+      span.style.opacity = '1';
     }
   });
 
-  // Push manually
-  pushManualBtn.addEventListener('click', () => {
-    setLoading(pushManualBtn, true);
-    showStatus('⏳ Requesting manual push...', 'info');
-    
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0] && tabs[0].url.includes('geeksforgeeks.org/problems/')) {
-        chrome.tabs.sendMessage(tabs[0].id, { action: "MANUAL_PUSH" }, (response) => {
-          setLoading(pushManualBtn, false);
-          
-          if (chrome.runtime.lastError) {
-             showStatus('❌ Please refresh the GeeksforGeeks page.', 'error');
-          } else if (response && response.status === 'success') {
-             showStatus('✅ Sync successful!', 'success');
-             loadUI(); // Refresh stats
-          } else if (response && response.status === 'queued') {
-             showStatus(`⏳ Queued: ${response.message || 'Offline/Rate Limited'}`, 'info');
-             loadUI();
-          } else {
-             const errMsg = response?.message || 'Push failed.';
-             if (errMsg.includes('403') || errMsg.includes('permission')) {
-                 showStatus('❌ Token does not have required repo permissions', 'error');
-             } else {
-                 showStatus(`❌ GitHub Error: ${errMsg}`, 'error');
-             }
-          }
-        });
-      } else {
-        setLoading(pushManualBtn, false);
-        showStatus('❌ Not on a GeeksforGeeks problem page.', 'error');
-      }
+  // Logout
+  logoutBtn.addEventListener('click', async () => {
+    if (confirm('Are you sure you want to logout?')) {
+      await chrome.storage.local.remove(['githubToken', 'user', 'selectedRepo']);
+      showToast('Logged out successfully', 'info');
+      await updateUIState();
+    }
+  });
+
+  // Repo Select
+  repoSelect.addEventListener('change', async (e) => {
+    const selectedRepo = e.target.value;
+    await chrome.storage.local.set({ 
+      selectedRepo: selectedRepo,
+      githubRepo: selectedRepo // Keep both in sync for background.js compatibility
     });
+    if (selectedRepo) {
+      showToast(`Target set to ${selectedRepo.split('/')[1]}`, 'success');
+    }
+  });
+
+  // Refresh Repos
+  refreshReposBtn.addEventListener('click', async () => {
+    const { selectedRepo } = await chrome.storage.local.get(['selectedRepo']);
+    refreshReposBtn.classList.add('rotating');
+    await loadRepositories(selectedRepo);
+    setTimeout(() => refreshReposBtn.classList.remove('rotating'), 500);
+    showToast('Repository list updated', 'info');
+  });
+
+  // Auto-Sync Toggle
+  autoSyncToggle.addEventListener('change', async (e) => {
+    const autoSync = e.target.checked;
+    await chrome.storage.local.set({ autoSync });
+    showToast(autoSync ? 'Auto-sync enabled' : 'Auto-sync disabled', 'info');
+  });
+
+  // Manual Push
+  pushManualBtn.addEventListener('click', async () => {
+    pushManualBtn.disabled = true;
+    const loader = pushManualBtn.querySelector('.spinner');
+    loader.style.display = 'inline-block';
+
+    try {
+      const response = await chrome.runtime.sendMessage({ action: 'pushCurrent' });
+      if (response && response.success) {
+        showToast('Code synced successfully!', 'success');
+      } else {
+        showToast(response?.error || 'Sync failed', 'error');
+      }
+    } catch (err) {
+      showToast('Push failed: Check connection', 'error');
+    } finally {
+      pushManualBtn.disabled = false;
+      loader.style.display = 'none';
+      updateUIState();
+    }
   });
 
   // Retry Queue
-  retryQueueBtn.addEventListener('click', () => {
-     setLoading(retryQueueBtn, true);
-     showStatus('⏳ Processing queue...', 'info');
-     
-     chrome.runtime.sendMessage({ action: "PROCESS_QUEUE" }, (response) => {
-        setLoading(retryQueueBtn, false);
-        if (response && response.status === 'success') {
-           showStatus('✅ Queue processed successfully!', 'success');
-           loadUI();
-        } else if (response && response.status === 'empty') {
-           showStatus('✅ Queue is already empty.', 'success');
-        } else {
-           const errMsg = response?.message || 'Queue failed';
-           if (errMsg.includes('403')) {
-               showStatus('⚠️ GitHub rate limit reached or missing permissions. Retrying later...', 'error');
-           } else {
-               showStatus(`❌ Queue Error: ${errMsg}`, 'error');
-           }
-           loadUI();
-        }
-     });
+  retryQueueBtn.addEventListener('click', async () => {
+    retryQueueBtn.disabled = true;
+    const loader = retryQueueBtn.querySelector('.spinner');
+    loader.style.display = 'inline-block';
+
+    try {
+      const response = await chrome.runtime.sendMessage({ action: 'retryQueue' });
+      if (response && response.success) {
+        showToast(`Synced ${response.count} items!`, 'success');
+      } else {
+        showToast('Queue is empty or sync failed', 'info');
+      }
+    } finally {
+      retryQueueBtn.disabled = false;
+      loader.style.display = 'none';
+      updateUIState();
+    }
   });
 
-  // Utils
-  function showStatus(message, type) {
-    statusMsg.textContent = message;
-    statusMsg.className = 'status-message show';
-    if (type === 'success') statusMsg.classList.add('status-success');
-    else if (type === 'error') statusMsg.classList.add('status-error');
-    else if (type === 'info') statusMsg.classList.add('status-info');
-    else if (type === 'warning') statusMsg.style.color = 'var(--warning-color)';
-    
-    // Don't auto-clear warnings about queue
-    if (type !== 'warning') {
-        setTimeout(() => {
-          if (statusMsg.textContent === message) {
-              statusMsg.classList.remove('show');
-              setTimeout(() => {
-                  if (!statusMsg.classList.contains('show')) {
-                      statusMsg.textContent = '';
-                      statusMsg.className = 'status-message';
-                  }
-              }, 300); // Wait for transition
-          }
-        }, 5000);
-    }
-  }
+  // Debug Toggle
+  debugToggle.addEventListener('change', async (e) => {
+    const debugMode = e.target.checked;
+    await chrome.storage.local.set({ debugMode });
+    debugLogs.style.display = debugMode ? 'block' : 'none';
+  });
 
-  function setLoading(btn, isLoading) {
-     const loader = btn.querySelector('.loader') || btn; 
-     if (btn.querySelector('.loader')) {
-         btn.querySelector('.loader').style.display = isLoading ? 'inline-block' : 'none';
-     }
-     btn.disabled = isLoading;
-  }
+  // Initial Load
+  await updateUIState();
+
+  // Listen for storage changes to update UI in real-time
+  chrome.storage.onChanged.addListener((changes) => {
+    if (changes.totalSolved || changes.currentStreak || changes.queue || changes.lastSynced) {
+      updateUIState();
+    }
+    
+    if (changes.logs && debugToggle.checked) {
+      debugLogs.textContent = (changes.logs.newValue || []).join('\n');
+      debugLogs.scrollTop = debugLogs.scrollHeight;
+    }
+  });
+
+  // Periodically check queue size for animations
+  setInterval(async () => {
+    const { queue } = await chrome.storage.local.get(['queue']);
+    const count = queue ? queue.length : 0;
+    queueCountEl.textContent = count;
+    if (count > 0) {
+       queueCountEl.style.color = 'var(--warning-color)';
+       queueCountEl.parentElement.querySelector('.stat-icon').classList.add('fire-animation');
+    } else {
+       queueCountEl.style.color = 'var(--text-color)';
+       queueCountEl.parentElement.querySelector('.stat-icon').classList.remove('fire-animation');
+    }
+  }, 2000);
 });

@@ -1,6 +1,10 @@
 
 // background.js
 
+const GITHUB_CLIENT_ID = 'Ov23lid1EC78Wl5IT5Tv'; // Your GitHub Client ID
+const BACKEND_URL = 'http://localhost:3000'; // Dev URL
+const REDIRECT_URI = `https://${chrome.runtime.id}.chromiumapp.org/`;
+
 async function log(message, ...args) {
   const { debugMode } = await chrome.storage.local.get(['debugMode']);
   if (debugMode) {
@@ -29,8 +33,29 @@ async function showTemporaryFireIcon() {
   }
 }
 
-// 🔥 MESSAGE HANDLER (FIXED)
+// 🔥 MESSAGE HANDLER
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.action === 'LOGIN') {
+    loginWithGitHub()
+      .then(result => sendResponse(result))
+      .catch(error => sendResponse({ status: 'error', message: error.message }));
+    return true;
+  }
+
+  if (request.action === 'LOGOUT') {
+    chrome.storage.local.remove(['githubToken', 'githubUser', 'githubRepo'], () => {
+      sendResponse({ status: 'success' });
+    });
+    return true;
+  }
+
+  if (request.action === 'GET_REPOS') {
+    fetchRepositories()
+      .then(repos => sendResponse({ status: 'success', repos }))
+      .catch(error => sendResponse({ status: 'error', message: error.message }));
+    return true;
+  }
+
   if (request.action === 'PUSH_SUBMISSION') {
     handleSubmission(request.data)
       .then(result => sendResponse(result))
@@ -42,22 +67,109 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
 });
 
-// 🔥 DIRECT PUSH (NO QUEUE FOR NOW)
-async function handleSubmission(data) {
-  let { githubPat, githubRepo } = await chrome.storage.local.get(['githubPat', 'githubRepo']);
+// 🔥 OAUTH FLOW
+async function loginWithGitHub() {
+  const authUrl = `https://github.com/login/oauth/authorize?client_id=${GITHUB_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=repo,user`;
 
-  if (!githubPat || !githubRepo) {
-    throw new Error('GitHub PAT or Repository not configured.');
+  return new Promise((resolve, reject) => {
+    chrome.identity.launchWebAuthFlow({
+      url: authUrl,
+      interactive: true
+    }, async (redirectUrl) => {
+      if (chrome.runtime.lastError || !redirectUrl) {
+        return reject(new Error(chrome.runtime.lastError ? chrome.runtime.lastError.message : 'Login failed'));
+      }
+
+      const url = new URL(redirectUrl);
+      const code = url.searchParams.get('code');
+
+      if (!code) {
+        return reject(new Error('No code returned from GitHub'));
+      }
+
+      try {
+        // Exchange code for token via backend
+        const res = await fetch(`${BACKEND_URL}/api/auth/github`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code })
+        });
+
+        const data = await res.json();
+
+        if (data.error) {
+          throw new Error(data.error_description || data.error || 'Token exchange failed');
+        }
+
+        const token = data.access_token;
+
+        // Fetch user profile
+        const userRes = await fetch(`${BACKEND_URL}/api/user`, {
+          headers: { 'Authorization': `token ${token}` }
+        });
+        const userData = await userRes.json();
+
+        await chrome.storage.local.set({ 
+          githubToken: token, 
+          githubUser: {
+            login: userData.login,
+            avatar: userData.avatar_url,
+            name: userData.name
+          }
+        });
+
+        resolve({ status: 'success', user: userData });
+      } catch (err) {
+        reject(err);
+      }
+    });
+  });
+}
+
+// 🔥 FETCH REPOSITORIES
+async function fetchRepositories() {
+  const { githubToken } = await chrome.storage.local.get(['githubToken']);
+  if (!githubToken) throw new Error('Not authenticated');
+
+  let repos = [];
+  let page = 1;
+  let hasMore = true;
+
+  while (hasMore && page < 5) { // Limit to 5 pages (150 repos)
+    const res = await fetch(`https://api.github.com/user/repos?sort=updated&per_page=30&page=${page}`, {
+      headers: {
+        'Authorization': `token ${githubToken}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Failed to fetch repos');
+
+    if (data.length === 0) {
+      hasMore = false;
+    } else {
+      repos = repos.concat(data.map(r => ({
+        full_name: r.full_name,
+        private: r.private
+      })));
+      page++;
+    }
   }
 
-  // Failsafe: if repo is a full URL, extract the owner/repo part
-  if (githubRepo.includes('github.com/')) {
-    githubRepo = githubRepo.split('github.com/')[1].split('/').slice(0, 2).join('/');
-    githubRepo = githubRepo.replace(/\/$/, '').replace(/\.git$/, '');
+  return repos;
+}
+
+// 🔥 DIRECT PUSH
+async function handleSubmission(data) {
+  let { githubToken, githubRepo } = await chrome.storage.local.get(['githubToken', 'githubRepo']);
+
+  if (!githubToken || !githubRepo) {
+    throw new Error('Please login and select a repository in the extension popup.');
   }
 
   try {
-    await syncSingleProblem(data, githubPat, githubRepo);
+    await syncSingleProblem(data, githubToken, githubRepo);
     return { status: 'success' };
   } catch (err) {
     console.error("[GFG Sync ERROR]", err);

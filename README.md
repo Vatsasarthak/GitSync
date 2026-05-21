@@ -26,14 +26,6 @@ A powerful Chrome Extension built to streamline DSA tracking, maintain coding co
 
 ---
 
-## 🎬 Full Video Demo
-
-[![Watch the Demo](https://img.youtube.com/vi/PGdAHBsV3_I/maxresdefault.jpg)](https://youtu.be/PGdAHBsV3_I)
-
-▶️ Click the image above to watch the complete demo video.
-
----
-
 # 🖼️ Screenshots
 
 ## 🔄 Auto Sync in Action

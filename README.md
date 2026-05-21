@@ -18,11 +18,10 @@ A powerful Chrome Extension built to streamline DSA tracking, maintain coding co
 
 ---
 
-# 🎥 Demo
 
 ## 📸 Extension Preview
 
-![Extension Preview](assets/Screenshot%202026-05-07%20024549.png)
+![Extension Preview](assets/Screenshot 2026-05-20 231246.png)
 
 ---
 

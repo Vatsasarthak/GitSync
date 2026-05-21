@@ -212,11 +212,18 @@ async function syncSingleProblem(data, pat, repo) {
   const commitMessage = `Added GFG: ${data.title} (${data.difficulty || 'Unknown'})`;
 
   // Construct README content
-  const readmeContent = `<h2>${data.title}</h2>
-<img src='https://img.shields.io/badge/Difficulty-${data.difficulty}-${difficultyColor}' alt='Difficulty: ${data.difficulty}' />
+  const problemLink = data.slug ? `https://www.geeksforgeeks.org/problems/${data.slug}/1` : '#';
+  const readmeContent = `<h2><a href="${problemLink}">${data.title}</a></h2>
+<h3>Difficulty: ${data.difficulty || 'Unknown'}</h3>
 <hr>
-${data.description || 'No description available.'}
-`;
+<div class="problem-statement">
+${data.description && data.description.trim() ? data.description : 'Problem description could not be extracted automatically.'}
+</div>
+
+---
+<p align="center">
+  ${data.slug ? `<a href="${problemLink}">View Problem on GeeksforGeeks</a>` : ''}
+</p>`;
 
   log(`🚀 Pushing Code: ${codePath}`);
   await pushToGitHub(pat, repo, codePath, data.code, commitMessage);
@@ -249,11 +256,13 @@ async function pushToGitHub(pat, repo, path, content, message) {
     sha = data.sha;
   }
 
-  // 🔥 SAFE BASE64 ENCODING (FIXED)
-  const encodedContent = btoa(
-    new TextEncoder().encode(content)
-      .reduce((data, byte) => data + String.fromCharCode(byte), '')
-  );
+  // 🔥 BULLETPROOF BASE64 ENCODING
+  const bytes = new TextEncoder().encode(content);
+  let binary = "";
+  for (let i = 0; i < bytes.byteLength; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  const encodedContent = btoa(binary);
 
   const body = {
     message: message,

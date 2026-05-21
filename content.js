@@ -3,6 +3,7 @@
 
 let isSyncing = false;
 let hasAutoSynced = false;
+let cachedProblemData = null; // 🔥 Store data early before it's hidden!
 
 // Debug logger
 async function log(message, ...args) {
@@ -122,45 +123,100 @@ function extractProblemData() {
       data.slug = urlParts[slugIndex + 1];
     }
 
+    // --- STRATEGY A: TRY JSON STATE (Most Accurate) ---
+    try {
+      const nextData = document.getElementById('__NEXT_DATA__');
+      if (nextData) {
+        const json = JSON.parse(nextData.innerHTML);
+        const problemData = json?.props?.pageProps?.problemData;
+        if (problemData) {
+          data.title = problemData.problem_name || '';
+          data.difficulty = problemData.difficulty || '';
+          data.description = problemData.problem_description || '';
+          data.slug = problemData.problem_slug || '';
+          log("✅ Extracted data from JSON state!");
+          return data;
+        }
+      }
+    } catch (e) {
+      log("JSON extraction failed, falling back to DOM scraping.");
+    }
+
+    // --- STRATEGY A: THE BLUEPRINT (Most Accurate) ---
+    try {
+      const nextData = document.getElementById('__NEXT_DATA__');
+      if (nextData) {
+        const json = JSON.parse(nextData.innerHTML);
+        // GFG often stores the actual problem HTML here:
+        const pData = 
+          json?.props?.pageProps?.problemData || 
+          json?.props?.pageProps?.initialState?.problemData;
+          
+        if (pData && pData.problem_description) {
+          data.title = pData.problem_name || data.title;
+          data.difficulty = pData.difficulty || data.difficulty;
+          data.description = pData.problem_description;
+          data.slug = pData.problem_slug || data.slug;
+          log("💎 Surgical Extraction Success!");
+          return data;
+        }
+      }
+    } catch (e) {
+      log("Surgical extraction failed, falling back to DOM.");
+    }
+
+    // --- STRATEGY B: DOM SCRAPING ---
     // 2. Title
     const titleElement =
-      document.querySelector('.problems_header_content__title h3') ||
-      document.querySelector('.problems_header_content__title') ||
+      document.querySelector('[class*="problems_header_left_side_hash"]') ||
+      document.querySelector('[class*="problems_title"]') ||
+      document.querySelector('div[class*="problems_problem_title"] h3') ||
       document.querySelector('h3.problem-tab__name') ||
-      document.querySelector('h1') ||
-      document.querySelector('.problem-tab__name');
+      document.querySelector('h1');
 
     if (titleElement) {
-      data.title = titleElement.innerText.split('\n')[0].trim();
-    } else if (data.slug) {
-      data.title = data.slug.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+      const rawTitle = titleElement.innerText.split('\n')[0].trim();
+      data.title = (rawTitle.length < 100) ? rawTitle : document.title.split(' | ')[0];
     } else {
-      data.title = "GFG Problem";
+      data.title = document.title.split(' | ')[0];
     }
+    data.title = data.title.replace(/GeeksforGeeks/i, '').replace(/Practice/i, '').replace(/\d+$/, '').trim();
 
     // 3. Difficulty
     const difficultyElement = 
-      document.querySelector('.problems_header_content__difficulty') ||
-      Array.from(document.querySelectorAll('div')).find(el => el.innerText.match(/^(Easy|Medium|Hard)$/i));
+      document.querySelector('[class*="problems_difficulty_value"]') ||
+      document.querySelector('[class*="problems_difficulty"]') ||
+      Array.from(document.querySelectorAll('div, span')).find(el => 
+        el.innerText.match(/Difficulty:\s*(Easy|Medium|Hard|School|Basic)/i) && el.innerText.length < 50
+      );
     
     if (difficultyElement) {
-      data.difficulty = difficultyElement.innerText.trim();
+      data.difficulty = difficultyElement.innerText.replace(/Difficulty:\s*/i, '').trim();
+      // If difficulty still contains too much text, clean it
+      if (data.difficulty.includes('\n')) data.difficulty = data.difficulty.split('\n')[0].trim();
     } else {
-      const bodyText = document.body.innerText;
-      if (bodyText.includes("Hard")) data.difficulty = "Hard";
-      else if (bodyText.includes("Medium")) data.difficulty = "Medium";
-      else if (bodyText.includes("Easy")) data.difficulty = "Easy";
-      else data.difficulty = "Unknown";
+      const text = document.body.innerText;
+      const match = text.match(/Difficulty:\s*(Easy|Medium|Hard|School|Basic)/i);
+      data.difficulty = match ? match[1] : "Unknown";
     }
 
     // 4. Description
     const desc =
-      document.querySelector('.problems_problem_content__Xm_eO') ||
       document.querySelector('.problem-statement') ||
-      document.querySelector('.problems_problem_content');
+      document.querySelector('[class*="problems_problem_content"]') ||
+      document.querySelector('[class*="problems_description"]');
 
     if (desc) {
-      data.description = desc.innerHTML;
+      // If it's the specific GFG container, it might have internal navigation
+      const statement = desc.querySelector('.problem-statement') || desc;
+      const clone = statement.cloneNode(true);
+      
+      // Remove known junk inside the statement
+      clone.querySelectorAll('script, style, iframe, button, .problems_header_content, .problems_footer_content').forEach(el => el.remove());
+      
+      data.description = clone.innerHTML.trim();
+    } else {
+      data.description = "Problem statement extraction failed. Please check GFG layout changes.";
     }
 
     // 5. Tags
@@ -190,11 +246,14 @@ async function syncSubmission(callback = null) {
   if (isSyncing) return;
   isSyncing = true;
 
-  log("Waiting for editor load...");
-  await new Promise(resolve => setTimeout(resolve, 4000)); // 🔥 important
-
   try {
-    const problemData = extractProblemData();
+    // 🔥 Use cached data if available, but ALWAYS get fresh code at the moment of sync!
+    const problemData = cachedProblemData || extractProblemData();
+    problemData.code = extractCode(); 
+    
+    // Also try one last time to get the language
+    const lang = document.querySelector('.selected-value') || document.querySelector('.language-selector');
+    if (lang) problemData.language = lang.innerText.trim();
 
     // 🚨 Abort if crucial data is missing
     if (!problemData.title || !problemData.code || problemData.code.startsWith("// Code could not be")) {
@@ -290,6 +349,27 @@ function setupObserver() {
   });
 }
 
-// Start observer
-setTimeout(setupObserver, 2500);
+// ✅ INITIALIZE
+function init() {
+  log("Initializing GFG Sync...");
+  
+  // 1. Incremental Capture: Try multiple times to ensure we get the data
+  const captureTimes = [2000, 5000, 10000];
+  captureTimes.forEach(ms => {
+    setTimeout(() => {
+      const freshData = extractProblemData();
+      // Only update if we got better data than before
+      if (freshData.description && freshData.description.length > 50) {
+        cachedProblemData = freshData;
+        log(`✅ Problem data cached at ${ms}ms:`, cachedProblemData.title);
+      }
+    }, ms);
+  });
+
+  // 2. Start watching for submission
+  setupObserver();
+}
+
+// Start the extension
+init();
 

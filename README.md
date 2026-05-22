@@ -5,6 +5,68 @@ A powerful Chrome Extension built to streamline DSA tracking, maintain coding co
 
 ---
 
+# 📦 How To Install GFG Sync
+
+## 1️⃣ Download The Repository
+
+Clone or download the project ZIP from GitHub.
+
+```bash
+git clone https://github.com/Vatsasarthak/GFGSync.git
+```
+
+Or click:
+
+**Code → Download ZIP**
+
+Then extract the folder.
+
+---
+
+## 2️⃣ Open Chrome Extensions Page
+
+Open Chrome and go to:
+
+```bash
+chrome://extensions/
+```
+
+---
+
+## 3️⃣ Enable Developer Mode
+
+Turn ON:
+
+✅ **Developer Mode**
+
+(Top Right Corner)
+
+---
+
+## 4️⃣ Load The Extension
+
+Click:
+
+✅ **Load Unpacked**
+
+Then select the extracted **GFGSync** folder.
+
+---
+
+## 5️⃣ Extension Installed Successfully 🚀
+
+Now the extension will appear in your Chrome extensions list.
+
+Open GeeksforGeeks and start solving problems.
+
+Whenever your submission is successful:
+
+✅ GFG Sync automatically detects it  
+✅ Extracts your code  
+✅ Pushes it directly to GitHub  
+
+---
+
 # ✨ Features
 
 ✅ Automatic detection of successful GFG submissions  
@@ -17,7 +79,6 @@ A powerful Chrome Extension built to streamline DSA tracking, maintain coding co
 ✅ Fully automated backend deployment with Render  
 
 ---
-
 
 ## 📸 Extension Preview
 
@@ -62,3 +123,49 @@ GFG/
  ├── Dynamic-Programming/
  ├── Linked-List/
  └── ...
+```
+
+---
+
+# 🌟 Why GFG Sync?
+
+Maintaining a coding repository manually can become repetitive and time-consuming during regular DSA practice.
+
+GFG Sync automates the entire workflow by instantly syncing your accepted GeeksforGeeks solutions to GitHub, helping students:
+
+- Build a strong coding portfolio
+- Maintain consistency
+- Track problem-solving progress
+- Organize DSA preparation efficiently
+
+---
+
+# 🚀 Future Improvements
+
+- Multi-language support
+- Advanced analytics dashboard
+- Problem revision tracking
+- Daily streak insights
+- One-click repository creation
+
+---
+
+# 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+Feel free to fork the repository and submit pull requests.
+
+---
+
+# 📜 License
+
+This project is licensed under the MIT License.
+
+---
+
+# ⭐ Support The Project
+
+If you found this project useful, consider giving it a ⭐ on GitHub.
+
+It helps the project reach more students and developers 🚀

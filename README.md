@@ -1,4 +1,4 @@
-# 🚀 GFG Sync
+# 🚀 GitSync
 
 Automatically sync your **GeeksforGeeks submissions** directly to GitHub with a single click.  
 A powerful Chrome Extension built to streamline DSA tracking, maintain coding consistency, and organize your problem-solving journey effortlessly.

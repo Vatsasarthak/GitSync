@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "GFG Sync",
+  "name": "GitSync",
   "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAn58ZL32VB3fSa0OMOgWsWrO5R2WpcnZ7+dJp7hxagZHH2eCUhsTnzJautbERmtxg0JLjUnikymDq+Fj0ei2+zfnLSp2oEvBSCeEacf0OrDQqSSrX1+x+wTN6B8ErEKn5deR/sSPvRmcAQg0b5dP1qhsk1CuuK3zwiaS3v+bnGcBZp4h3WF1FeOJLeR7180mI/BcyRRnuUyqUrhp2iTj86N8Uvk14nlHkbQ7jwzMwo6uCpbUSttI6EhR4PexK+t0oGmjahObAEs66W9aFRwZN1M6NxNUuplplo6u/wQ8cIuno2GDVdFT8aXkwnAW20W1QTXWU0Ve5eNmUp0WgUmrciwIDAQAB",
-  "version": "1.1.0",
-  "description": "Automatically sync your GeeksforGeeks solutions to a GitHub repository.",
+  "version": "2.0.0",
+  "description": "Multi-platform coding assistant syncing solutions from GeeksforGeeks, LeetCode, CodeChef, Codeforces, and HackerRank directly to GitHub.",
   "icons": {
     "16": "icons/icon16.png",
     "48": "icons/icon48.png",
@@ -19,11 +19,15 @@
   "host_permissions": [
     "https://api.github.com/*",
     "*://*.geeksforgeeks.org/*",
+    "*://*.leetcode.com/*",
+    "*://*.codechef.com/*",
+    "*://*.codeforces.com/*",
+    "*://*.hackerrank.com/*",
     "https://gfgsync.onrender.com/*",
     "http://localhost:3000/*"
   ],
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "src/popup/popup.html",
     "default_icon": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
@@ -31,16 +35,38 @@
     }
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "src/background/serviceWorker.js"
   },
   "content_scripts": [
     {
       "matches": [
+        "*://*.geeksforgeeks.org/problems/*",
         "*://practice.geeksforgeeks.org/*",
-        "*://www.geeksforgeeks.org/problems/*"
+        "*://*.leetcode.com/problems/*",
+        "*://*.codechef.com/*",
+        "*://*.codeforces.com/*",
+        "*://*.hackerrank.com/*"
       ],
-      "js": ["content.js"],
+      "js": [
+        "src/adapters/platformAdapter.js",
+        "src/content/gfgAdapter.js",
+        "src/content/leetcodeAdapter.js",
+        "src/content/codechefAdapter.js",
+        "src/content/codeforcesAdapter.js",
+        "src/content/hackerrankAdapter.js",
+        "src/content/mainContent.js"
+      ],
       "run_at": "document_end"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "icons/fire48.png"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ]
 }

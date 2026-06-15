@@ -1,171 +1,104 @@
 # 🚀 GitSync
 
-Automatically sync your **GeeksforGeeks submissions** directly to GitHub with a single click.  
-A powerful Chrome Extension built to streamline DSA tracking, maintain coding consistency, and organize your problem-solving journey effortlessly.
+> One Extension. Every Coding Platform. One GitHub Repository.
 
----
+GitSync automatically syncs your accepted coding solutions from multiple platforms directly to GitHub.
 
-# 📦 How To Install GFG Sync
+## ✨ Supported Platforms
 
-## 1️⃣ Download The Repository
+- ✅ GeeksforGeeks
+- ✅ LeetCode
+- ✅ CodeChef
+- ✅ Codeforces
+- ✅ HackerRank
 
-Clone or download the project ZIP from GitHub.
+## 🎯 Why GitSync?
 
-```bash
-git clone https://github.com/Vatsasarthak/GFGSync.git
+Most students practice across multiple coding platforms.
+
+GitSync automatically detects accepted submissions, extracts the code, and pushes it directly to GitHub—keeping your coding portfolio updated without manual uploads.
+
+## 🔥 Features
+
+- 🚀 Automatic solution sync
+- 🔐 GitHub OAuth Login
+- 📂 Organized repository structure
+- 🔄 Duplicate detection
+- 📥 Offline queue support
+- ⚡ Retry mechanism
+- 🎯 Manual sync option
+- 🌐 Multi-platform support
+
+## ⚡ How It Works
+
+```text
+Solve Problem
+    ↓
+Accepted Submission
+    ↓
+GitSync Detects Solution
+    ↓
+Extracts Code
+    ↓
+Checks Duplicates
+    ↓
+Pushes To GitHub
 ```
 
-Or click:
+## 📂 Supported Structure
 
-**Code → Download ZIP**
-
-Then extract the folder.
-
----
-
-## 2️⃣ Open Chrome Extensions Page
-
-Open Chrome and go to:
-
-```bash
-chrome://extensions/
+```text
+DSA/
+├── LeetCode/
+├── GeeksforGeeks/
+├── CodeChef/
+├── Codeforces/
+└── HackerRank/
 ```
 
----
+## 🛠️ Tech Stack
 
-## 3️⃣ Enable Developer Mode
-
-Turn ON:
-
-✅ **Developer Mode**
-
-(Top Right Corner)
-
----
-
-## 4️⃣ Load The Extension
-
-Click:
-
-✅ **Load Unpacked**
-
-Then select the extracted **GFGSync** folder.
-
----
-
-## 5️⃣ Extension Installed Successfully 🚀
-
-Now the extension will appear in your Chrome extensions list.
-
-Open GeeksforGeeks and start solving problems.
-
-Whenever your submission is successful:
-
-✅ GFG Sync automatically detects it  
-✅ Extracts your code  
-✅ Pushes it directly to GitHub  
-
----
-
-# ✨ Features
-
-✅ Automatic detection of successful GFG submissions  
-✅ Instantly pushes solutions to GitHub  
-✅ Clean folder structure organized by Topic & Difficulty  
-✅ Creates separate files for every problem  
-✅ Supports Manual Sync for better reliability  
-✅ GitHub OAuth Authentication Support  
-✅ Lightweight, fast, and beginner-friendly  
-✅ Fully automated backend deployment with Render  
-
----
-
-## 📸 Extension Preview
-
-![Extension Preview](assets/Screenshot%202026-05-20%20231246.png)
-
----
-
-# 🖼️ Screenshots
-
-## 🔄 Auto Sync in Action
-
-![Auto Sync](assets/Screenshot%202026-05-07%20024627.png)
-
----
-
-## 📂 Organized GitHub Repository
-
-![Repository Structure](assets/Screenshot%202026-05-07%20015856.png)
-
----
-
-# ⚙️ Tech Stack
-
-- Chrome Extension (Manifest V3)
 - JavaScript
 - Node.js
 - Express.js
-- GitHub REST API
 - GitHub OAuth
-- DOM Manipulation
-- Monaco Editor Extraction
-- Render Deployment
+- GitHub REST API
+- Chrome Extension APIs
+- Manifest V3
 
----
+## 📸 Screenshots
 
-# 📂 Repository Structure
+### Dashboard
 
-```bash
-GFG/
- ├── Arrays/
- ├── Bit-Manipulation/
- ├── Dynamic-Programming/
- ├── Linked-List/
- └── ...
-```
+![Dashboard](assets/dashboard.png)
 
----
+### Sync Success
 
-# 🌟 Why GFG Sync?
+![Success](assets/sync-success.png)
 
-Maintaining a coding repository manually can become repetitive and time-consuming during regular DSA practice.
+### Repository Structure
 
-GFG Sync automates the entire workflow by instantly syncing your accepted GeeksforGeeks solutions to GitHub, helping students:
+![Repository](assets/repository.png)
 
-- Build a strong coding portfolio
-- Maintain consistency
-- Track problem-solving progress
-- Organize DSA preparation efficiently
+## 🚀 Roadmap
 
----
+- [ ] Analytics Dashboard
+- [ ] Daily Coding Streaks
+- [ ] Contest Tracking
+- [ ] Revision Planner
+- [ ] VS Code Integration
 
-# 🚀 Future Improvements
+## 🤝 Contributing
 
-- Multi-language support
-- Advanced analytics dashboard
-- Problem revision tracking
-- Daily streak insights
-- One-click repository creation
+Contributions are welcome.
 
----
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Open a Pull Request
 
-# 🤝 Contributing
+## ⭐ Support
 
-Contributions, issues, and feature requests are welcome!
+If GitSync helped you, consider giving the repository a ⭐.
 
-Feel free to fork the repository and submit pull requests.
-
----
-
-# 📜 License
-
-This project is licensed under the MIT License.
-
----
-
-# ⭐ Support The Project
-
-If you found this project useful, consider giving it a ⭐ on GitHub.
-
-It helps the project reach more students and developers 🚀
+Built with ❤️ by Sarthak Vatsa

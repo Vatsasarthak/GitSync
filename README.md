@@ -1,171 +1,255 @@
+````md
 # 🚀 GitSync
 
-Automatically sync your **GeeksforGeeks submissions** directly to GitHub with a single click.  
-A powerful Chrome Extension built to streamline DSA tracking, maintain coding consistency, and organize your problem-solving journey effortlessly.
+**One Extension. Every Coding Platform. One GitHub Repository.**
+
+GitSync automatically syncs your accepted coding solutions from multiple platforms directly to GitHub, helping you build a consistent coding portfolio without manual uploads.
+
+Whether you're solving problems on LeetCode, GeeksforGeeks, CodeChef, Codeforces, or HackerRank, GitSync keeps your repository updated automatically.
 
 ---
 
-# 📦 How To Install GFG Sync
+# ✨ Supported Platforms
 
-## 1️⃣ Download The Repository
+✅ GeeksforGeeks
 
-Clone or download the project ZIP from GitHub.
+✅ LeetCode
 
-```bash
-git clone https://github.com/Vatsasarthak/GFGSync.git
-```
+✅ CodeChef
 
-Or click:
+✅ Codeforces
 
-**Code → Download ZIP**
+✅ HackerRank
 
-Then extract the folder.
+More platforms coming soon 🚀
 
 ---
 
-## 2️⃣ Open Chrome Extensions Page
+# 🎯 Why GitSync?
 
-Open Chrome and go to:
+Most students practice across multiple coding platforms.
+
+Managing solutions manually becomes repetitive and often results in an incomplete GitHub profile.
+
+GitSync solves this problem by automatically detecting accepted submissions and pushing them directly to your GitHub repository.
+
+---
+
+# 🔥 Features
+
+✅ Automatic Sync of accepted submissions
+
+✅ Multi-Platform Support
+
+✅ GitHub OAuth Login (No Personal Access Token Required)
+
+✅ One-Click Repository Connection
+
+✅ Duplicate Solution Detection
+
+✅ Offline Queue Support
+
+✅ Retry Mechanism for Failed Uploads
+
+✅ Organized Repository Structure
+
+✅ Manual Sync Option
+
+✅ Fast & Lightweight
+
+✅ Modern Chrome Extension (Manifest V3)
+
+---
+
+# 📦 Installation
+
+## Step 1: Clone Repository
 
 ```bash
+git clone https://github.com/Vatsasarthak/GitSync.git
+````
+
+Or download ZIP from GitHub.
+
+---
+
+## Step 2: Open Chrome Extensions
+
+Navigate to:
+
+```text
 chrome://extensions/
 ```
 
 ---
 
-## 3️⃣ Enable Developer Mode
+## Step 3: Enable Developer Mode
 
 Turn ON:
 
-✅ **Developer Mode**
-
-(Top Right Corner)
+✅ Developer Mode
 
 ---
 
-## 4️⃣ Load The Extension
+## Step 4: Load Extension
 
 Click:
 
-✅ **Load Unpacked**
+**Load Unpacked**
 
-Then select the extracted **GFGSync** folder.
-
----
-
-## 5️⃣ Extension Installed Successfully 🚀
-
-Now the extension will appear in your Chrome extensions list.
-
-Open GeeksforGeeks and start solving problems.
-
-Whenever your submission is successful:
-
-✅ GFG Sync automatically detects it  
-✅ Extracts your code  
-✅ Pushes it directly to GitHub  
+Select the GitSync folder.
 
 ---
 
-# ✨ Features
+## Step 5: Connect GitHub
 
-✅ Automatic detection of successful GFG submissions  
-✅ Instantly pushes solutions to GitHub  
-✅ Clean folder structure organized by Topic & Difficulty  
-✅ Creates separate files for every problem  
-✅ Supports Manual Sync for better reliability  
-✅ GitHub OAuth Authentication Support  
-✅ Lightweight, fast, and beginner-friendly  
-✅ Fully automated backend deployment with Render  
+1. Open GitSync
+2. Login using GitHub OAuth
+3. Select repository
+4. Start solving problems
+
+GitSync handles the rest.
 
 ---
 
-## 📸 Extension Preview
+# ⚡ How It Works
 
-![Extension Preview](assets/Screenshot%202026-05-20%20231246.png)
-
----
-
-# 🖼️ Screenshots
-
-## 🔄 Auto Sync in Action
-
-![Auto Sync](assets/Screenshot%202026-05-07%20024627.png)
-
----
-
-## 📂 Organized GitHub Repository
-
-![Repository Structure](assets/Screenshot%202026-05-07%20015856.png)
-
----
-
-# ⚙️ Tech Stack
-
-- Chrome Extension (Manifest V3)
-- JavaScript
-- Node.js
-- Express.js
-- GitHub REST API
-- GitHub OAuth
-- DOM Manipulation
-- Monaco Editor Extraction
-- Render Deployment
+```text
+Solve Problem
+      ↓
+Accepted Submission
+      ↓
+GitSync Detects Solution
+      ↓
+Extracts Code
+      ↓
+Checks Duplicates
+      ↓
+Pushes To GitHub
+      ↓
+Repository Updated
+```
 
 ---
 
 # 📂 Repository Structure
 
-```bash
-GFG/
- ├── Arrays/
- ├── Bit-Manipulation/
- ├── Dynamic-Programming/
- ├── Linked-List/
- └── ...
+```text
+DSA/
+├── LeetCode/
+│   ├── Arrays/
+│   ├── Strings/
+│   └── Graphs/
+│
+├── GeeksforGeeks/
+│   ├── Arrays/
+│   └── Trees/
+│
+├── CodeChef/
+│
+├── Codeforces/
+│
+└── HackerRank/
 ```
 
 ---
 
-# 🌟 Why GFG Sync?
+# 🛠 Tech Stack
 
-Maintaining a coding repository manually can become repetitive and time-consuming during regular DSA practice.
+### Frontend
 
-GFG Sync automates the entire workflow by instantly syncing your accepted GeeksforGeeks solutions to GitHub, helping students:
+* JavaScript
+* HTML
+* CSS
+* Chrome Extension APIs
 
-- Build a strong coding portfolio
-- Maintain consistency
-- Track problem-solving progress
-- Organize DSA preparation efficiently
+### Backend
+
+* Node.js
+* Express.js
+
+### Integrations
+
+* GitHub OAuth
+* GitHub REST API
+
+### Architecture
+
+* Service Workers
+* Content Scripts
+* Platform Adapters
+* Queue Management
+* Duplicate Detection Engine
 
 ---
 
-# 🚀 Future Improvements
+# 📸 Screenshots
 
-- Multi-language support
-- Advanced analytics dashboard
-- Problem revision tracking
-- Daily streak insights
-- One-click repository creation
+## Extension Dashboard
+
+```md
+![Dashboard](assets/dashboard.png)
+```
+
+---
+
+## Sync Success
+
+```md
+![Success](assets/sync-success.png)
+```
+
+---
+
+## GitHub Repository Structure
+
+```md
+![Repository](assets/repository.png)
+```
+
+---
+
+# 🚀 Roadmap
+
+### Coming Soon
+
+* Contest Tracking
+* Daily Coding Streaks
+* Analytics Dashboard
+* Submission History
+* Revision Planner
+* Language Statistics
+* One-Click Repo Creation
+* VS Code Integration
+* Browser Sync
 
 ---
 
 # 🤝 Contributing
 
-Contributions, issues, and feature requests are welcome!
+Contributions are welcome.
 
-Feel free to fork the repository and submit pull requests.
+1. Fork the repository
+2. Create your feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
 ---
 
 # 📜 License
 
-This project is licensed under the MIT License.
+Licensed under the MIT License.
 
 ---
 
-# ⭐ Support The Project
+# ⭐ Support
 
-If you found this project useful, consider giving it a ⭐ on GitHub.
+If GitSync saves you time and helps maintain your coding portfolio, consider giving the project a ⭐.
 
-It helps the project reach more students and developers 🚀
+Every star helps more students discover GitSync.
+
+Built with ❤️ by Sarthak Vatsa
+
+```
+```

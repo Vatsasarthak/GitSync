@@ -337,6 +337,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Initial render
   await updateUIState();
 
+  // Open external links in new browser tabs securely
+  document.querySelectorAll('.footer-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const url = e.currentTarget.href;
+      chrome.tabs.create({ url });
+    });
+  });
+
+
   // Storage listener for active updates
   chrome.storage.onChanged.addListener((changes) => {
     if (changes.githubToken || changes.githubUser || changes.githubRepo || changes.stats || changes.lastSynced || changes.syncQueue || changes.syncHistory) {

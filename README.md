@@ -172,13 +172,13 @@ GitSync will automatically detect and sync your solutions to GitHub
 ## 📸 Screenshots
 
 ### Dashboard
-![Dashboard](assets/dashboard.png)
+![Dashboard](assets/Dashboard.png)
 
 ### Sync Success
 ![Success](assets/sync-success.png)
 
 ### Repository Structure
-![Repository](assets/repository.png)
+![Repository](assets/Repo structure.png)
 
 ---
 
@@ -281,7 +281,7 @@ If GitSync helps you build a better portfolio, consider:
 - 📝 **Issues**: [GitHub Issues](https://github.com/Vatsasarthak/GitSync/issues)
 - 💬 **Discussions**: [GitHub Discussions](https://github.com/Vatsasarthak/GitSync/discussions)
 - 🐦 **Twitter**: Share your experience with #GitSync
-- 📧 **Email**: sarthakvatsa@example.com
+- 📧 **Email**: vatsarpysarthak0007@gmail.com
 
 ---
 

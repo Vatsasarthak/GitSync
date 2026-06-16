@@ -178,7 +178,8 @@ GitSync will automatically detect and sync your solutions to GitHub
 ![Success](assets/sync-success.png)
 
 ### Repository Structure
-![Repository](assets/Repo structure.png)
+![Repository](assets/Repo.png)
+
 
 ---
 

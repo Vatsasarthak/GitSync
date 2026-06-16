@@ -11,11 +11,11 @@
 
 ## 🤔 The Problem
 
-You're solving coding problems on **multiple platforms**—GeeksforGeeks, LeetCode, CodeChef, Codeforces, HackerRank. But your GitHub remains empty. Your portfolio doesn't reflect your effort. **Manual copy-paste?** Exhausting!
+You're solving coding problems on **multiple platforms**—GeeksforGeeks, LeetCode, CodeChef, Codeforces, HackerRank. But your GitHub remains empty. Your portfolio doesn't reflect your effort. **M[...]
 
 ## ✨ The Solution: GitSync
 
-GitSync **automatically** detects your accepted submissions, extracts the code, and commits it to GitHub with proper organization. Your GitHub portfolio stays **active and impressive** while you focus on **solving problems**.
+GitSync **automatically** detects your accepted submissions, extracts the code, and commits it to GitHub with proper organization. Your GitHub portfolio stays **active and impressive** while you f[...]
 
 ---
 
@@ -121,49 +121,51 @@ Database:
 
 ## 🚀 Quick Start
 
-### 1. **Clone the Repository**
+### 1. **Download the Repository**
 ```bash
+# Download the ZIP file from GitHub
+# Or clone it:
 git clone https://github.com/Vatsasarthak/GitSync.git
 cd GitSync
 ```
 
-### 2. **Install Dependencies**
+### 2. **Extract the ZIP File**
 ```bash
-# Server setup
-cd server
-npm install
-
-# Extension setup (if applicable)
-cd ../extension
-npm install
+# If you downloaded the ZIP file, extract it to your desired location
+unzip GitSync.zip
+cd GitSync
 ```
 
-### 3. **Configure GitHub OAuth**
-- Go to GitHub Settings → Developer settings → OAuth Apps
-- Create a new OAuth App
-- Set Authorization callback URL to: `http://localhost:3000/auth/callback`
-- Copy `Client ID` and `Client Secret`
-
-### 4. **Environment Variables**
-```bash
-# Create .env file
-GITHUB_CLIENT_ID=your_client_id
-GITHUB_CLIENT_SECRET=your_client_secret
-GITHUB_REDIRECT_URI=http://localhost:3000/auth/callback
-SESSION_SECRET=your_random_secret
+### 3. **Open Chrome Extensions Page**
+```
+Open your Chrome browser and navigate to: chrome://extensions/
 ```
 
-### 5. **Start the Server**
-```bash
-npm start
-# Server running on http://localhost:3000
+### 4. **Enable Developer Mode**
+```
+Look for the toggle switch in the top-right corner of the chrome://extensions/ page
+Click it to enable "Developer mode"
 ```
 
-### 6. **Install Extension**
-- Open `chrome://extensions/`
-- Enable "Developer mode"
-- Click "Load unpacked"
-- Select the `extension` folder
+### 5. **Load Unpacked Extension**
+```
+Click the "Load unpacked" button that appears after enabling Developer mode
+Select the extracted GitSync folder (specifically the 'extension' subfolder)
+Wait for the extension to load
+```
+
+### 6. **Authorize the Extension**
+```
+Once loaded, click the GitSync extension icon
+Follow the authorization prompts to connect your GitHub account
+Grant the necessary permissions
+```
+
+### 7. **Start Using GitSync**
+```
+You're all set! Start solving problems on GeeksforGeeks, LeetCode, or other platforms
+GitSync will automatically detect and sync your solutions to GitHub
+```
 
 ---
 

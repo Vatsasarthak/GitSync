@@ -1,322 +1,377 @@
-# 🚀 GitSync
+# 🚀 GitSync — Your Coding Journey, Automatically Synced
 
-> Automatically sync your coding solutions from **GeeksforGeeks, LeetCode, CodeChef, Codeforces, HackerRank** directly to GitHub—**no copy-paste, no manual work**. Just code, solve, and sync! ⚡
+<p align="center">
+  <strong>Code. Solve. Sync. Build your developer portfolio.</strong>
+  <br />
+  Automatically sync and organize coding solutions on GitHub.
+</p>
 
-[![GitHub Stars](https://img.shields.io/github/stars/Vatsasarthak/GitSync?style=flat-square&color=yellow)](https://github.com/Vatsasarthak/GitSync)
-[![GitHub Forks](https://img.shields.io/github/forks/Vatsasarthak/GitSync?style=flat-square)](https://github.com/Vatsasarthak/GitSync)
-[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
-[![GitHub Issues](https://img.shields.io/github/issues/Vatsasarthak/GitSync?style=flat-square)](https://github.com/Vatsasarthak/GitSync/issues)
+<p align="center">
+  <a href="https://github.com/Vatsasarthak/GitSync">
+    <img src="https://img.shields.io/github/stars/Vatsasarthak/GitSync?style=for-the-badge&logo=github&color=yellow" alt="GitHub Stars" />
+  </a>
+  <a href="https://github.com/Vatsasarthak/GitSync/network/members">
+    <img src="https://img.shields.io/github/forks/Vatsasarthak/GitSync?style=for-the-badge&logo=github" alt="GitHub Forks" />
+  </a>
+  <a href="https://github.com/Vatsasarthak/GitSync/issues">
+    <img src="https://img.shields.io/github/issues/Vatsasarthak/GitSync?style=for-the-badge" alt="GitHub Issues" />
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge" alt="MIT License" />
+  </a>
+</p>
 
----
-
-## 🤔 The Problem
-
-You're solving coding problems on **multiple platforms**—GeeksforGeeks, LeetCode, CodeChef, Codeforces, HackerRank. But your GitHub remains empty. Your portfolio doesn't reflect your effort. **M[...]
-
-## ✨ The Solution: GitSync
-
-GitSync **automatically** detects your accepted submissions, extracts the code, and commits it to GitHub with proper organization. Your GitHub portfolio stays **active and impressive** while you f[...]
-
----
-
-## 🎯 Why GitSync?
-
-| Feature | Before | After |
-|---------|--------|-------|
-| **Time to update GitHub** | 5-10 mins per solution | ~2 seconds (automatic) |
-| **Portfolio visibility** | Empty/outdated | Fresh daily commits |
-| **Multiple platforms** | Manual management | One-click sync |
-| **Organization** | Scattered folders | Platform-organized structure |
-
----
-
-## ✨ Core Features
-
-- ✅ **Automatic Detection** - Detects accepted submissions in real-time
-- ✅ **Multi-Platform Support** - GeeksforGeeks, LeetCode, CodeChef, Codeforces, HackerRank
-- ✅ **Smart Organization** - Auto-creates folder structure by platform & difficulty
-- ✅ **Duplicate Prevention** - Avoids pushing duplicate solutions
-- ✅ **Offline Queue** - Works even when offline, syncs when back online
-- ✅ **One-Click Setup** - GitHub OAuth integration, no complicated setup
-- ✅ **Retry Mechanism** - Auto-retries failed syncs
-- ✅ **Manual Sync** - Push solutions anytime with one click
-- ✅ **Metadata Rich** - Problem description, difficulty, tags in commits
+<p align="center">
+  <a href="#-overview">Overview</a> •
+  <a href="#-features">Features</a> •
+  <a href="#-proof-of-work">Proof of Work</a> •
+  <a href="#-how-it-works">How It Works</a> •
+  <a href="#-installation">Installation</a> •
+  <a href="#-roadmap">Roadmap</a> •
+  <a href="#-contributing">Contributing</a>
+</p>
 
 ---
 
-## 🔥 Supported Platforms
+## 💡 Overview
 
-| Platform | Status | Auto-Detect | Manual Sync |
-|----------|--------|-------------|------------|
-| **GeeksforGeeks** | ✅ Active | ✅ Yes | ✅ Yes |
-| **LeetCode** | ✅ Active | ✅ Yes | ✅ Yes |
-| **CodeChef** | ✅ Active | ✅ Yes | ✅ Yes |
-| **Codeforces** | ✅ Active | ✅ Yes | ✅ Yes |
-| **HackerRank** | ✅ Active | ✅ Yes | ✅ Yes |
+**GitSync** is a coding-solution synchronization project designed to help developers organize their programming practice on GitHub without repetitive manual copying and committing.
+
+Developers solve problems across platforms such as LeetCode, GeeksforGeeks, CodeChef, Codeforces, and HackerRank. GitSync aims to streamline the process of collecting coding solutions and maintaining an organized developer portfolio.
+
+### 🎯 The Problem
+
+- Coding solutions are scattered across multiple platforms.
+- Manually uploading solutions takes time.
+- Maintaining a consistent repository structure is difficult.
+- GitHub portfolios may not reflect ongoing coding practice.
+
+### ✨ The Solution
+
+GitSync connects coding practice with GitHub through a solution synchronization workflow.
+
+**Solve problems. Sync your solutions. Keep your coding portfolio organized.**
+
+## ✨ Features
+
+| Feature | Description |
+|---|---|
+| 🔄 Solution Synchronization | Sync coding solutions to GitHub through the available workflow. |
+| 🌐 Multi-Platform Support | Designed for popular coding platforms. |
+| 📁 Organized Solutions | Keep problem records organized in a structured repository. |
+| ♻️ Duplicate Prevention | Avoid duplicate files where supported by the implementation. |
+| 🔁 Retry Handling | Retry failed synchronization operations where implemented. |
+| 🖱️ Manual Sync | Initiate synchronization manually where supported. |
+| 📌 Problem Metadata | Preserve relevant problem information and metadata where available. |
+
+*Feature availability depends on the current implementation. Refer to the source code and issues for the latest status.*
 
 ---
 
-## 📂 Repository Structure
+## ✅ Proof of Work — GitSync in Action
 
-GitSync creates a clean, organized folder structure:
+GitSync has a companion repository containing coding-problem records committed with GitSync-identifying commit messages.
 
+Instead of relying only on feature descriptions, visitors can inspect the destination repository, individual commits, and changed files.
+
+### 🔗 Live Destination Repository
+
+<p align="center">
+  <a href="https://github.com/Vatsasarthak/Data-Structures-and-Algorithms">
+    <img src="https://img.shields.io/badge/Explore-Destination_Repository-181717?style=for-the-badge&logo=github" alt="Explore destination repository" />
+  </a>
+</p>
+
+**Repository:** [Vatsasarthak/Data-Structures-and-Algorithms](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms)
+
+### 📌 Verified Commit Examples
+
+The following commits provide concrete examples of coding-problem records added to the destination repository.
+
+| # | Coding Problem | Difficulty | Commit Evidence |
+|---|---|---|---|
+| 1 | Contains Duplicate II | Easy | [View Commit](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/a1c0ca913461766cd8ee908af33e5713651fe6e9) |
+| 2 | Sum of Squares of Special Elements | Easy | [View Commit](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/4df89f17ecbe93aef3d6b8d68f290aeae343916f) |
+| 3 | Maximum Depth of Binary Tree | Easy | [View Commit](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/c32c925cb4e68d1a251b865446edee9b367db4d2) |
+| 4 | Find the Difference | Easy | [View Commit](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/48e286f8890b6d22de3fb8e8556a36a7abb9a296) |
+| 5 | Find All Numbers Disappeared in an Array | Easy | [View Commit](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/f402fa631ee1d73d3a4c7d035791c3858c8970ae) |
+| 6 | Increasing Triplet Subsequence | Medium | [View Commit](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/84172c2c56a21f80361be0737a86224f192e744c) |
+| 7 | Binary Tree Level Order Traversal | Medium | [View Commit](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/6fb0cf48dc9e2d50b0bd190d567e5958fc7102d8) |
+
+### 🔍 What This Evidence Demonstrates
+
+- **Real repository changes:** Visitors can inspect actual commits and the files they modify.
+- **Traceable development history:** Each example links directly to its corresponding GitHub commit.
+- **Structured problem records:** The inspected example includes problem metadata and a generated problem record.
+- **Practical project demonstration:** The destination repository provides a way to examine the results of the GitSync workflow.
+
+### ⚙️ End-to-End Workflow
+
+1. Solve a coding problem on a supported platform.
+2. Use GitSync to synchronize the solution through the implemented workflow.
+3. Review the resulting record in the destination repository.
+4. Inspect the corresponding commit and changed files.
+
+**Explore more evidence:** [View the complete commit history →](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commits/)
+
+> These commits provide concrete examples of the workflow. Platform coverage, automatic detection, and other capabilities should be evaluated against the current source code.
+
+---
+
+## 🌐 Supported Platforms
+
+GitSync is designed around the following coding platforms.
+
+| Platform | Website |
+|---|---|
+| LeetCode | [Visit Website](https://leetcode.com/) |
+| GeeksforGeeks | [Visit Website](https://www.geeksforgeeks.org/) |
+| CodeChef | [Visit Website](https://www.codechef.com/) |
+| Codeforces | [Visit Website](https://codeforces.com/) |
+| HackerRank | [Visit Website](https://www.hackerrank.com/) |
+
+Check the current source code to confirm which integrations are operational in your version.
+
+## ⚙️ How It Works
+
+```text
+       Solve a Coding Problem
+                 |
+                 v
+       Submit Your Solution
+                 |
+                 v
+      Detect or Select Solution
+                 |
+                 v
+        Organize the Solution
+                 |
+                 v
+       Synchronize with GitHub
+                 |
+                 v
+      Inspect the Destination Repo
+                 |
+                 v
+       Build Your Coding Portfolio
 ```
-DSA/
+
+The exact detection, authentication, and synchronization steps depend on the implemented extension workflow.
+
+## 📂 Example Repository Structure
+
+GitSync aims to keep coding solutions organized in a structured repository.
+
+```text
+Data-Structures-and-Algorithms/
 ├── LeetCode/
 │   ├── Easy/
-│   │   └── TwoSum.js
 │   ├── Medium/
-│   │   └── AddTwoNumbers.js
 │   └── Hard/
-│       └── MedianOfTwoSortedArrays.js
 ├── GeeksforGeeks/
-│   ├── Arrays/
-│   │   └── LargestElement.js
-│   └── Strings/
-│       └── Reverse.js
 ├── CodeChef/
 ├── Codeforces/
 └── HackerRank/
 ```
 
----
+*Illustrative structure. The actual destination repository may use a different directory layout.*
 
-## ⚡ How It Works
+## 🛠️ Technology Stack
 
-```
-1. Install Extension
-        ↓
-2. Authenticate with GitHub (OAuth)
-        ↓
-3. Solve Problems (on any platform)
-        ↓
-4. Submit & Get Accepted
-        ↓
-5. GitSync Detects → Extracts → Checks → Pushes
-        ↓
-6. Your GitHub Profile Updates Automatically ✨
-```
+GitSync is designed around browser-extension and GitHub integration workflows.
 
----
+| Component | Technology / Purpose |
+|---|---|
+| Browser Extension | Chrome Extension / Manifest V3 |
+| GitHub Integration | GitHub API |
+| Authentication | GitHub authorization flow, if implemented |
+| User Interface | Browser extension interface |
+| Local State | Browser storage or configured persistence |
+| Synchronization | Solution processing and repository updates |
 
-## 🛠️ Tech Stack
+Refer to the source code for the definitive list of frameworks, libraries, and services.
 
-```
-Frontend:
-  • Chrome Extension (Manifest V3)
-  • React/Vue.js for UI
-  • Local Storage for cache
+## 🚀 Installation
 
-Backend:
-  • Node.js + Express.js
-  • GitHub REST API v3
-  • OAuth 2.0 for authentication
+### Prerequisites
 
-Database:
-  • SQLite (local sync queue)
-  • Session storage for credentials
-```
+- Google Chrome or a compatible Chromium browser.
+- Git, if you prefer cloning the repository.
+- A GitHub account with access to a destination repository.
 
----
+### Option 1: Clone the Repository
 
-## 🚀 Quick Start
-
-### 1. **Download the Repository**
 ```bash
-# Download the ZIP file from GitHub
-# Or clone it:
 git clone https://github.com/Vatsasarthak/GitSync.git
 cd GitSync
 ```
 
-### 2. **Extract the ZIP File**
-```bash
-# If you downloaded the ZIP file, extract it to your desired location
-unzip GitSync.zip
-cd GitSync
-```
+### Option 2: Download ZIP
 
-### 3. **Open Chrome Extensions Page**
-```
-Open your Chrome browser and navigate to: chrome://extensions/
-```
+1. Visit the [GitSync repository](https://github.com/Vatsasarthak/GitSync).
+2. Click **Code → Download ZIP**.
+3. Extract the downloaded archive.
+4. Locate the browser extension directory.
 
-### 4. **Enable Developer Mode**
-```
-Look for the toggle switch in the top-right corner of the chrome://extensions/ page
-Click it to enable "Developer mode"
-```
+### Load the Extension in Chrome
 
-### 5. **Load Unpacked Extension**
-```
-Click the "Load unpacked" button that appears after enabling Developer mode
-Select the extracted GitSync folder (specifically the 'extension' subfolder)
-Wait for the extension to load
-```
+1. Open `chrome://extensions/`.
+2. Enable **Developer mode**.
+3. Click **Load unpacked**.
+4. Select the directory containing `manifest.json`.
+5. Confirm that GitSync appears in the extensions list.
+6. Follow the setup and authentication instructions provided by the implementation.
 
-### 6. **Authorize the Extension**
-```
-Once loaded, click the GitSync extension icon
-Follow the authorization prompts to connect your GitHub account
-Grant the necessary permissions
-```
+> Select the directory containing `manifest.json`, not necessarily the repository root.
 
-### 7. **Start Using GitSync**
-```
-You're all set! Start solving problems on GeeksforGeeks, LeetCode, or other platforms
-GitSync will automatically detect and sync your solutions to GitHub
-```
+### Configure GitHub
 
----
+Complete any required authentication, repository selection, and configuration steps specified in the source code.
+
+Never commit private access tokens, OAuth secrets, or credentials to GitHub.
 
 ## 📸 Screenshots
 
 ### Dashboard
-![Dashboard](assets/Dashboard.png)
 
-### Sync Success
-![Success](assets/sync-success.png)
+![GitSync Dashboard](assets/Dashboard.png)
 
-### Repository Structure
-![Repository](assets/Repo.png)
+### Synchronization Success
 
+![GitSync Sync Success](assets/sync-success.png)
 
----
+### Destination Repository
+
+![GitSync Repository Structure](assets/Repo.png)
+
+If an image does not render, verify that the file exists under `assets/` and that the filename capitalization matches.
 
 ## 🗺️ Roadmap
 
-- [ ] **Analytics Dashboard** - Track your coding progress
-- [ ] **Streak Counter** - Daily coding streaks & statistics
-- [ ] **Contest Tracking** - Track contest ratings & participation
-- [ ] **Revision Planner** - Smart revision suggestions
-- [ ] **VS Code Extension** - Sync from VS Code directly
-- [ ] **Mobile App** - iOS & Android support
-- [ ] **AI-powered Tags** - Auto-categorize problems
-- [ ] **Collaborative Sync** - Team repositories support
+Potential improvements for future releases:
 
----
+- [ ] 📊 Coding analytics dashboard
+- [ ] 🔥 Daily coding streak tracker
+- [ ] 🏆 Contest rating and participation tracking
+- [ ] 🧠 Smart revision planner
+- [ ] 💻 VS Code integration
+- [ ] 📱 Mobile companion application
+- [ ] 🏷️ Improved problem tagging
+- [ ] 👥 Collaborative repository workflows
+- [ ] 🧪 Expanded automated tests
+- [ ] 🔐 Continued security and permission improvements
 
-## 🔒 Privacy & Security
+Have a suggestion? [Open an issue](https://github.com/Vatsasarthak/GitSync/issues).
 
-- ✅ Your GitHub token is stored **locally** in your browser
-- ✅ We never access your passwords
-- ✅ OAuth 2.0 for secure authentication
-- ✅ Zero tracking of your solutions
-- ✅ Open-source for community audit
+## 🔒 Privacy and Security
 
----
+Security matters when working with coding platforms and GitHub repositories.
 
-## 📊 Community Stats
+- Never commit credentials or access tokens.
+- Request only the permissions required by the application.
+- Protect sensitive configuration and environment variables.
+- Review which data is stored locally or transmitted.
+- Verify token storage and authentication behavior in the implementation.
+- Report security vulnerabilities responsibly.
 
-- ⭐ **Stars**: 9+ and growing!
-- 🍴 **Forks**: Welcome contributions
-- 👥 **Contributors**: You can be next!
-- 📌 **Active Development**: Regular updates
-
----
+Consult the source code and relevant security documentation for implementation-specific details.
 
 ## 🤝 Contributing
 
-We ❤️ contributions! Here's how to help:
+Contributions are welcome! Help improve GitSync through bug fixes, platform integrations, testing, documentation, and UI/UX improvements.
 
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/AmazingFeature`)
-3. **Commit** your changes (`git commit -m 'Add AmazingFeature'`)
-4. **Push** to the branch (`git push origin feature/AmazingFeature`)
-5. **Open** a Pull Request
+### Contribution Workflow
 
-### Areas We Need Help With:
-- 🐛 **Bug fixes** - Report issues you find
-- ✨ **New platforms** - Add support for more coding sites
-- 📖 **Documentation** - Improve guides & tutorials
-- 🎨 **UI/UX** - Enhance the extension interface
-- 🧪 **Testing** - Write tests for features
+1. Fork the repository.
+2. Clone your fork.
+3. Create a feature branch.
+4. Implement and test your changes.
+5. Commit with a meaningful message.
+6. Push your branch.
+7. Open a pull request.
 
----
+```bash
+git clone https://github.com/Vatsasarthak/GitSync.git
+cd GitSync
 
-## 📋 Guidelines
+git checkout -b feature/your-feature
 
-- Follow existing code style
-- Write meaningful commit messages
-- Test before submitting PR
-- Update documentation if needed
-- Be respectful & constructive
+git add .
+git commit -m "feat: describe your change"
 
----
+git push origin feature/your-feature
+```
 
-## ⭐ Show Your Support
+### Areas for Contribution
 
-If GitSync helps you build a better portfolio, consider:
+- 🐛 Bug fixes and error handling
+- 🌐 Platform integrations
+- 🎨 UI/UX improvements
+- 🧪 Automated tests
+- 📖 Documentation
+- 🔐 Security improvements
 
-1. **⭐ Star** this repository
-2. **🔗 Share** with your coding friends
-3. **💬 Feedback** in discussions/issues
-4. **🐛 Report bugs** you discover
-5. **💡 Suggest features** you'd love
+Please include clear descriptions and relevant testing details in pull requests.
 
----
+## 🐛 Troubleshooting
 
-## 🛠️ Troubleshooting
+### Extension Does Not Load
 
-### Extension not detecting submissions?
-- Ensure you're on a supported platform
-- Check if OAuth token is valid
-- Restart the browser
-- Check browser console for errors
+- Verify that the selected folder contains `manifest.json`.
+- Review errors on `chrome://extensions/`.
+- Check that referenced files are present.
 
-### GitHub sync failing?
-- Verify GitHub OAuth credentials
-- Check internet connection
-- Ensure repository exists
-- Check GitHub API rate limits
+### Solutions Are Not Detected
 
-### Duplicate submissions?
-- GitSync auto-detects duplicates
-- Manual sync won't create duplicates
-- Check repository for existing files
+- Confirm that the platform is supported by the current implementation.
+- Review extension permissions and browser console errors.
+- Check for known platform-specific issues.
 
----
+### GitHub Synchronization Fails
 
-## 📧 Support & Contact
+- Verify repository permissions and authentication.
+- Check your network connection.
+- Review GitHub API errors and rate limits.
+- Inspect extension or backend logs where available.
 
-- 📝 **Issues**: [GitHub Issues](https://github.com/Vatsasarthak/GitSync/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/Vatsasarthak/GitSync/discussions)
-- 🐦 **Twitter**: Share your experience with #GitSync
-- 📧 **Email**: vatsarpysarthak0007@gmail.com
+### Screenshots Do Not Appear
 
----
+- Verify image paths under `assets/`.
+- Check capitalization and file extensions.
+- Ensure the images are committed to the repository.
+
+For additional help, [open a GitHub issue](https://github.com/Vatsasarthak/GitSync/issues). Remove tokens and other sensitive data before sharing logs.
 
 ## 📄 License
 
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+This project is intended to use the MIT License. See the [LICENSE](LICENSE) file for the applicable terms.
+
+Ensure the license file exists and matches the license badge before publishing.
+
+## ⭐ Support GitSync
+
+If you find GitSync useful:
+
+- ⭐ Star the repository.
+- 🐛 Report reproducible bugs.
+- 💡 Suggest new features.
+- 🤝 Contribute improvements.
+- 📢 Share the project with other developers.
+
+Your feedback helps improve the project.
 
 ---
 
-## 🙏 Acknowledgments
-
-- Thanks to the **coding community** for inspiration
-- Built with ❤️ for **students** and **developers**
-- Special thanks to all **contributors** (present & future!)
-
----
-
-## 📈 Project Growth
-
-Help us grow! Share GitSync with:
-- 👨‍💻 Coding groups on Discord
-- 🎓 College coding clubs
-- 💼 Developer communities
-- 🐦 Twitter/LinkedIn
-- 📱 Reddit communities (r/learnprogramming, etc.)
-
----
-
-<div align="center">
-
-### Built with ❤️ by [Sarthak Vatsa](https://github.com/Vatsasarthak)
-
-**Made for students and developers who believe coding should be celebrated** 🎉
-
-[⬆ Back to top](#-gitsync)
-
-</div>
+<p align="center">
+  <strong>Built with ❤️ by <a href="https://github.com/Vatsasarthak">Sarthak Vatsa</a></strong>
+  <br />
+  Making coding progress easier to organize, share, and showcase.
+  <br /><br />
+  <a href="https://github.com/Vatsasarthak/GitSync">GitSync Repository</a>
+  •
+  <a href="https://github.com/Vatsasarthak/Data-Structures-and-Algorithms">Proof of Work</a>
+  •
+  <a href="https://github.com/Vatsasarthak/GitSync/issues">Issues</a>
+  •
+  <a href="https://github.com/Vatsasarthak/GitSync/pulls">Pull Requests</a>
+</p>

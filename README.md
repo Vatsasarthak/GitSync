@@ -107,10 +107,27 @@ The following commits provide concrete examples of coding-problem records added 
 
 ### ⚙️ End-to-End Workflow
 
-1. Solve a coding problem on a supported platform.
-2. Use GitSync to synchronize the solution through the implemented workflow.
-3. Review the resulting record in the destination repository.
-4. Inspect the corresponding commit and changed files.
+```text
+       Solve a Coding Problem
+                 |
+                 v
+       Submit Your Solution
+                 |
+                 v
+      Detect or Select Solution
+                 |
+                 v
+        Organize the Solution
+                 |
+                 v
+       Synchronize with GitHub
+                 |
+                 v
+      Inspect the Destination Repo
+                 |
+                 v
+      Build Your Coding Portfolio
+```
 
 **Explore more evidence:** [View the complete commit history →](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commits/)
 
@@ -153,7 +170,7 @@ Check the current source code to confirm which integrations are operational in y
       Inspect the Destination Repo
                  |
                  v
-       Build Your Coding Portfolio
+      Build Your Coding Portfolio
 ```
 
 The exact detection, authentication, and synchronization steps depend on the implemented extension workflow.
@@ -238,7 +255,9 @@ Never commit private access tokens, OAuth secrets, or credentials to GitHub.
 
 ### Synchronization Success
 
-![GitSync Sync Success](assets/sync-success.png)
+GitSync successfully syncs coding solutions to GitHub directly from the coding workflow.
+
+![GitSync Synchronization Success](assets/sync-success.png)
 
 ### Destination Repository
 

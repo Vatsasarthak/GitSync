@@ -251,7 +251,11 @@ Never commit private access tokens, OAuth secrets, or credentials to GitHub.
 
 ### Dashboard
 
-![GitSync Dashboard](assets/Dashboard.png)
+### Dashboard
+
+<p align="center">
+  <img src="assets/Dashboard.png" alt="GitSync Dashboard" width="650" />
+</p>
 
 ### Synchronization Success
 

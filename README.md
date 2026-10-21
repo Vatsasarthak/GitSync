@@ -1,3 +1,4 @@
+
 # 🚀 GitSync — Your Coding Journey, Automatically Synced
 
 <p align="center">
@@ -70,68 +71,34 @@ GitSync connects coding practice with GitHub through a solution synchronization 
 
 ## ✅ Proof of Work — GitSync in Action
 
-GitSync has a companion repository containing coding-problem records committed with GitSync-identifying commit messages.
+GitSync's destination repository contains solution records with commits explicitly labelled as GitSync-generated. You can inspect the commit message, changed files, and resulting problem record directly on GitHub.
 
-Instead of relying only on feature descriptions, visitors can inspect the destination repository, individual commits, and changed files.
+### Live Repositories
 
-### 🔗 Live Destination Repository
+- **Extension Source:** [Vatsasarthak/GitSync](https://github.com/Vatsasarthak/GitSync)
+- **Destination Repository:** [Vatsasarthak/Data-Structures-and-Algorithms](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms)
+- **Destination Commit History:** [View all commits](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commits/main/)
 
-<p align="center">
-  <a href="https://github.com/Vatsasarthak/Data-Structures-and-Algorithms">
-    <img src="https://img.shields.io/badge/Explore-Destination_Repository-181717?style=for-the-badge&logo=github" alt="Explore destination repository" />
-  </a>
-</p>
+### Example Commits
 
-**Repository:** [Vatsasarthak/Data-Structures-and-Algorithms](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms)
+| Example | What You Can Verify |
+|---|---|
+| [Contains Duplicate II — LeetCode](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/a1c0ca913461766cd8ee908af33e5713651fe6e9) | Inspect the commit message and added problem record. |
+| [Sum of Squares of Special Elements — LeetCode](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/4df89f17ecbe93aef3d6b8d68f290aeae343916f) | Inspect another problem record and its changed files. |
+| [Maximum Depth of Binary Tree — LeetCode](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/c32c925cb4e68d1a251b865446edee9b367db4d2) | Inspect a further example in the destination repository. |
 
-### 📌 Verified Commit Examples
+These links demonstrate that GitHub contains commits labelled as GitSync output. They are evidence of destination-repository changes, not proof that every supported platform or every current build works end to end.
 
-The following commits provide concrete examples of coding-problem records added to the destination repository.
+### Reproduce a Sync
 
-| # | Coding Problem | Difficulty | Commit Evidence |
-|---|---|---|---|
-| 1 | Contains Duplicate II | Easy | [View Commit](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/a1c0ca913461766cd8ee908af33e5713651fe6e9) |
-| 2 | Sum of Squares of Special Elements | Easy | [View Commit](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/4df89f17ecbe93aef3d6b8d68f290aeae343916f) |
-| 3 | Maximum Depth of Binary Tree | Easy | [View Commit](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/c32c925cb4e68d1a251b865446edee9b367db4d2) |
-| 4 | Find the Difference | Easy | [View Commit](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/48e286f8890b6d22de3fb8e8556a36a7abb9a296) |
-| 5 | Find All Numbers Disappeared in an Array | Easy | [View Commit](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/f402fa631ee1d73d3a4c7d035791c3858c8970ae) |
-| 6 | Increasing Triplet Subsequence | Medium | [View Commit](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/84172c2c56a21f80361be0737a86224f192e744c) |
-| 7 | Binary Tree Level Order Traversal | Medium | [View Commit](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commit/6fb0cf48dc9e2d50b0bd190d567e5958fc7102d8) |
+1. Follow the setup instructions in this README and [GitHub OAuth Setup](GITHUB_OAUTH_SETUP.md).
+2. Load the unpacked extension from the directory containing `manifest.json` in `chrome://extensions/`.
+3. Complete the configured GitHub authentication and destination-repository setup.
+4. Use a coding platform and submission flow supported by the current implementation.
+5. Check the extension's visible status or logs for the sync result.
+6. Open the destination repository and confirm the expected file and commit were created or updated.
 
-### 🔍 What This Evidence Demonstrates
-
-- **Real repository changes:** Visitors can inspect actual commits and the files they modify.
-- **Traceable development history:** Each example links directly to its corresponding GitHub commit.
-- **Structured problem records:** The inspected example includes problem metadata and a generated problem record.
-- **Practical project demonstration:** The destination repository provides a way to examine the results of the GitSync workflow.
-
-### ⚙️ End-to-End Workflow
-
-```text
-       Solve a Coding Problem
-                 |
-                 v
-       Submit Your Solution
-                 |
-                 v
-      Detect or Select Solution
-                 |
-                 v
-        Organize the Solution
-                 |
-                 v
-       Synchronize with GitHub
-                 |
-                 v
-      Inspect the Destination Repo
-                 |
-                 v
-      Build Your Coding Portfolio
-```
-
-**Explore more evidence:** [View the complete commit history →](https://github.com/Vatsasarthak/Data-Structures-and-Algorithms/commits/)
-
-> These commits provide concrete examples of the workflow. Platform coverage, automatic detection, and other capabilities should be evaluated against the current source code.
+If the sync fails, capture the browser extension error and relevant non-sensitive logs, then check [Troubleshooting](#-troubleshooting). Never share OAuth secrets, tokens, or `.env` values.
 
 ---
 
@@ -151,29 +118,29 @@ Check the current source code to confirm which integrations are operational in y
 
 ## ⚙️ How It Works
 
-```text
-       Solve a Coding Problem
-                 |
-                 v
-       Submit Your Solution
-                 |
-                 v
-      Detect or Select Solution
-                 |
-                 v
-        Organize the Solution
-                 |
-                 v
-       Synchronize with GitHub
-                 |
-                 v
-      Inspect the Destination Repo
-                 |
-                 v
-      Build Your Coding Portfolio
+The intended user journey is shown below. The exact platform-detection and message-handling details are implemented in the extension source; consult those files when debugging a specific platform.
+
+```mermaid
+flowchart TD
+    A[Install GitSync extension] --> B[Configure GitHub access]
+    B --> C[Visit a supported coding platform]
+    C --> D[Submit or select a solution]
+    D --> E[Extension detects or receives solution data]
+    E --> F[Validate and prepare solution]
+    F --> G[Send through the implemented sync workflow]
+    G --> H[Create or update a file in the destination repository]
+    H --> I[Verify the result on GitHub]
 ```
 
-The exact detection, authentication, and synchronization steps depend on the implemented extension workflow.
+### What to Check When a Sync Fails
+
+- **Detection:** Confirm that the platform is supported by the current source code and that its content script or detection handler is running.
+- **Authentication:** Confirm GitHub authorization is configured and has the required repository access.
+- **Processing and Queue:** Inspect the extension/service-worker logs and queue state where these are available in the current implementation.
+- **Upload:** Check the GitHub API response, destination repository, file path, and rate-limit/error messages.
+- **Verification:** Confirm the expected file appears in the destination repository and inspect the resulting commit.
+
+This diagram describes the workflow at a high level. It does not guarantee that every integration or failure-recovery path has been verified on every platform. See [Troubleshooting](#-troubleshooting) and inspect the source for implementation-specific behavior.
 
 ## 📂 Example Repository Structure
 
@@ -251,15 +218,13 @@ Never commit private access tokens, OAuth secrets, or credentials to GitHub.
 
 ### Dashboard
 
-### Dashboard
-
 <p align="center">
   <img src="assets/Dashboard.png" alt="GitSync Dashboard" width="650" />
 </p>
 
 ### Synchronization Success
 
-GitSync successfully syncs coding solutions to GitHub directly from the coding workflow.
+GitSync is intended to sync coding solutions to GitHub through the supported coding workflow.
 
 ![GitSync Synchronization Success](assets/sync-success.png)
 
@@ -271,20 +236,22 @@ If an image does not render, verify that the file exists under `assets/` and tha
 
 ## 🗺️ Roadmap
 
-Potential improvements for future releases:
+The roadmap below lists **future improvements**, not claims about current functionality. Existing capabilities should be checked against the source code and reproducible evidence above.
 
-- [ ] 📊 Coding analytics dashboard
-- [ ] 🔥 Daily coding streak tracker
-- [ ] 🏆 Contest rating and participation tracking
-- [ ] 🧠 Smart revision planner
-- [ ] 💻 VS Code integration
-- [ ] 📱 Mobile companion application
-- [ ] 🏷️ Improved problem tagging
-- [ ] 👥 Collaborative repository workflows
-- [ ] 🧪 Expanded automated tests
-- [ ] 🔐 Continued security and permission improvements
+### Planned
 
-Have a suggestion? [Open an issue](https://github.com/Vatsasarthak/GitSync/issues).
+- [ ] Add a coding analytics dashboard with solution counts and platform breakdowns.
+- [ ] Add a daily streak tracker based on verified sync history.
+- [ ] Explore contest rating and participation tracking where supported APIs permit it.
+- [ ] Build a smart revision planner from saved problem metadata.
+- [ ] Explore a VS Code integration.
+- [ ] Explore a mobile companion experience.
+- [ ] Improve problem tagging and metadata consistency across platforms.
+- [ ] Add collaborative destination-repository workflows.
+- [ ] Expand automated browser-level and end-to-end tests for each supported platform.
+- [ ] Improve rate-limit backpressure, diagnostics, and recovery from transient API failures where gaps remain.
+
+Items will be marked complete only after implementation and verification. Have a suggestion? [Open an issue](https://github.com/Vatsasarthak/GitSync/issues).
 
 ## 🔒 Privacy and Security
 
@@ -318,7 +285,6 @@ git clone https://github.com/Vatsasarthak/GitSync.git
 cd GitSync
 
 git checkout -b feature/your-feature
-
 git add .
 git commit -m "feat: describe your change"
 
